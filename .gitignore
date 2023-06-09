@@ -22,4 +22,6 @@ go.work
 
 .idea/
 .DS_Store
-main.go
+main.*
+
+/target
