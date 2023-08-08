@@ -76,3 +76,32 @@ func rotateRight(head *ListNode, k int) *ListNode {
 
 	return newHead
 }
+
+// 82. 删除排序链表中的重复元素 II
+func deleteDuplicates(head *ListNode) *ListNode {
+	if head == nil {
+		return nil
+	}
+
+	dummyNode := &ListNode{}
+	pre, p, q := dummyNode, head, head.Next
+	for q != nil {
+		if q.Val > p.Val {
+			if p.Next == q {
+				pre.Next = p
+				pre = pre.Next
+				pre.Next = nil
+			}
+			p = q
+			q = q.Next
+		} else {
+			q = q.Next
+		}
+	}
+
+	//保留尾节点情况
+	if p.Next == nil {
+		pre.Next = p
+	}
+	return dummyNode.Next
+}
