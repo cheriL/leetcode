@@ -1,3 +1,4 @@
+// Package _go https://leetcode.cn/tag/linked-list/problemset/
 package _go
 
 // 86. 分隔链表
@@ -104,4 +105,44 @@ func deleteDuplicates(head *ListNode) *ListNode {
 		pre.Next = p
 	}
 	return dummyNode.Next
+}
+
+// 92. 反转链表 II
+func reverseBetween(head *ListNode, left int, right int) *ListNode {
+	if head == nil || left == right {
+		return head
+	}
+
+	pre := head
+	var head2 *ListNode
+	if left > 1 {
+		for i := 1; i < left-1 && pre != nil; i++ {
+			pre = pre.Next
+		}
+		head2 = pre.Next
+	} else {
+		head2 = pre
+	}
+
+	if head2 == nil || head2.Next == nil {
+		return head
+	}
+
+	var p *ListNode
+	var q *ListNode
+	p, q = head2, head2.Next
+	p.Next = nil
+	for i := 1; i <= right-left && p != nil; i++ {
+		temp := q.Next
+		q.Next = p
+		p = q
+		q = temp
+	}
+	head2.Next = q
+	if head2 == head {
+		return p
+	} else {
+		pre.Next = p
+		return head
+	}
 }
