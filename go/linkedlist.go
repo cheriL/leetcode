@@ -146,3 +146,58 @@ func reverseBetween(head *ListNode, left int, right int) *ListNode {
 		return head
 	}
 }
+
+// 109. 有序链表转换二叉搜索树
+func sortedListToBST(head *ListNode) *TreeNode {
+	var findRoot func(*ListNode, *ListNode) *TreeNode
+
+	findRoot = func(start, end *ListNode) *TreeNode {
+		if start == nil {
+			return nil
+		}
+
+		if start == end {
+			return &TreeNode{
+				Val: start.Val,
+			}
+		}
+
+		if start.Next == end {
+			if end == nil {
+				return &TreeNode{
+					Val: start.Val,
+				}
+			} else {
+				return &TreeNode{
+					Val: end.Val,
+					Left: &TreeNode{
+						Val: start.Val,
+					},
+				}
+			}
+		}
+
+		p, q := start, start
+		//找到root节点时的前一个节点
+		var pre *ListNode
+		for q != end && q != nil && q.Next != nil {
+			pre = p
+			p = p.Next
+			q = q.Next.Next
+		}
+		//断链
+		if pre != nil {
+			pre.Next = nil
+		}
+
+		root := &TreeNode{
+			Val: p.Val,
+		}
+		root.Left = findRoot(start, pre)
+		root.Right = findRoot(p.Next, q)
+
+		return root
+	}
+
+	return findRoot(head, nil)
+}
