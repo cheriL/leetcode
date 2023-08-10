@@ -245,3 +245,23 @@ func flatten(root *TreeNode) {
 
 	chgFunc(root)
 }
+
+// 83. 删除排序链表中的重复元素
+func deleteDuplicates1(head *ListNode) *ListNode {
+	if head == nil {
+		return nil
+	}
+
+	p := head
+	for p.Next != nil {
+		if p.Next.Val == p.Val {
+			temp := p.Next
+			p.Next = temp.Next
+			temp.Next = nil
+		} else {
+			p = p.Next
+		}
+	}
+
+	return head
+}
