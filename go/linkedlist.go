@@ -201,3 +201,47 @@ func sortedListToBST(head *ListNode) *TreeNode {
 
 	return findRoot(head, nil)
 }
+
+// 114. 二叉树展开为链表
+func flatten(root *TreeNode) {
+	var stack []*TreeNode
+	isEmpty := func() bool {
+		return len(stack) == 0
+	}
+	pop := func() *TreeNode {
+		node := stack[len(stack)-1]
+		stack = stack[:len(stack)-1]
+		return node
+	}
+	push := func(node *TreeNode) {
+		stack = append(stack, node)
+	}
+
+	var chgFunc func(node *TreeNode)
+	chgFunc = func(node *TreeNode) {
+		if node == nil {
+			return
+		}
+		//右子树入栈
+		if node.Right != nil {
+			temp := node.Right
+			push(temp)
+			node.Right = nil
+		}
+		if node.Left != nil {
+			node.Right = node.Left
+			node.Left = nil
+		} else {
+			if !isEmpty() {
+				child := pop()
+				node.Right = child
+			}
+		}
+		if node.Right == nil {
+			return
+		}
+		chgFunc(node.Right)
+	}
+
+	chgFunc(root)
+}
