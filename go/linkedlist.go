@@ -328,3 +328,24 @@ func connect2(root *Node) *Node {
 	doConn(root)
 	return root
 }
+
+// 141. 环形链表
+func hasCycle(head *ListNode) bool {
+	if head == nil || head.Next == nil {
+		return false
+	}
+	if head.Next == head {
+		return true
+	}
+
+	dummyNode := &ListNode{Next: head}
+	for p, q := dummyNode.Next, dummyNode.Next.Next; q != nil && q.Next != nil; {
+		if q == p || q.Next == p {
+			return true
+		}
+		p = p.Next
+		q = q.Next.Next
+	}
+
+	return false
+}
