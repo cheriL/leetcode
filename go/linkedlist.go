@@ -265,3 +265,26 @@ func deleteDuplicates1(head *ListNode) *ListNode {
 
 	return head
 }
+
+// 116. 填充每个节点的下一个右侧节点指针
+func connect(root *Node) *Node {
+	//先序地去遍历树，过程中利用 next
+	var doConn func(*Node)
+	doConn = func(node *Node) {
+		if node == nil {
+			return
+		}
+		if node.Left != nil {
+			node.Left.Next = node.Right
+			//完美二叉树，有左子节点的情况一定也有右子节点
+			if node.Next != nil {
+				node.Right.Next = node.Next.Left
+			}
+		}
+		doConn(node.Left)
+		doConn(node.Right)
+	}
+
+	doConn(root)
+	return root
+}

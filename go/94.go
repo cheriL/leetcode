@@ -1,15 +1,9 @@
 package _go
 
-type TreeNode struct {
-	Val int
-	Left *TreeNode
-	Right *TreeNode
-}
-
-/**94 中序遍历
- * Definition for a binary tree node.
-
- */
+/*
+*94 中序遍历
+  - Definition for a binary tree node.
+*/
 func inorderTraversal(root *TreeNode) []int {
 	var res []int
 	if root == nil {
@@ -28,7 +22,7 @@ func inorderTraversal(root *TreeNode) []int {
 	return res
 }
 
-//95生成 不同的二叉搜索树 II  回溯
+// 95生成 不同的二叉搜索树 II  回溯
 func generateTrees(n int) []*TreeNode {
 	var res []*TreeNode
 
@@ -39,14 +33,14 @@ func generateTrees(n int) []*TreeNode {
 		}
 		var list []*TreeNode
 
-		for i := start; i <= end; i++{
+		for i := start; i <= end; i++ {
 			leftRes := gen(start, i-1)
 			rightRes := gen(i+1, end)
-			for _, lr := range leftRes{
-				for _, rr := range rightRes{
+			for _, lr := range leftRes {
+				for _, rr := range rightRes {
 					newNode := &TreeNode{
-						Val: i,
-						Left: lr,
+						Val:   i,
+						Left:  lr,
 						Right: rr,
 					}
 					list = append(list, newNode)
@@ -60,7 +54,7 @@ func generateTrees(n int) []*TreeNode {
 	return res
 }
 
-//96生成 不同的二叉搜索树数量 动态规划
+// 96生成 不同的二叉搜索树数量 动态规划
 func numTrees(n int) int {
 	G := make([]int, n+1)
 	G[0], G[1] = 1, 1
@@ -69,12 +63,12 @@ func numTrees(n int) int {
 	for i := 2; i <= n; i++ {
 		sum := 0
 		//j根节点
-		for j := 1; j <= i; j++{
+		for j := 1; j <= i; j++ {
 			//左子树的数量为G(i-1)
 			//右子树的数量为G(n-i)
 			left := G[j-1]
 			right := G[i-j]
-			sum += left*right
+			sum += left * right
 		}
 		G[i] = sum
 	}

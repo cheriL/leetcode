@@ -20,8 +20,8 @@ func lengthOfLongestSubstring(s string) int {
 			break
 		}
 
-		for j := i+1; j < length; j++ {
-			subStr := s[i:j+1]
+		for j := i + 1; j < length; j++ {
+			subStr := s[i : j+1]
 			if strings.Count(subStr, string(s[j])) > 1 {
 				l := len(subStr) - 1
 				if l > subLen {
@@ -54,7 +54,7 @@ func longestPalindrome(s string) string {
 
 	var strList []string
 	for i := 0; i < length; i++ {
-		for j := i+2; j <= length; j++ {
+		for j := i + 2; j <= length; j++ {
 			if s[i] == s[j-1] {
 				str := s[i:j]
 				strList = append(strList, str)
@@ -70,8 +70,8 @@ func longestPalindrome(s string) string {
 			continue
 		}
 
-		start, end := 0, subLen - 1
-		for ; ; {
+		start, end := 0, subLen-1
+		for {
 			if start >= end {
 				if maxSubLen < subLen {
 					maxSubLen = subLen
@@ -88,15 +88,15 @@ func longestPalindrome(s string) string {
 				break
 			}
 
-			start ++
-			end --
+			start++
+			end--
 		}
 	}
 
 	return maxSubStr
 }
 
-//N字变换 1 <= numRows <= 1000
+// N字变换 1 <= numRows <= 1000
 func convertN(s string, numRows int) string {
 	length := len(s)
 	if numRows == 1 || length <= numRows {
@@ -105,14 +105,14 @@ func convertN(s string, numRows int) string {
 
 	var newStr string
 
-	indexInterval := numRows * 2 - 2
+	indexInterval := numRows*2 - 2
 	rowIndex := numRows
 
-	for i := 0; i < numRows; i ++ {
-		if i == numRows - 1 {
+	for i := 0; i < numRows; i++ {
+		if i == numRows-1 {
 			rowIndex = numRows
 		}
-		interval := rowIndex * 2 - 2
+		interval := rowIndex*2 - 2
 
 		for j := i; j < length; {
 			newStr = newStr + string(s[j])
@@ -122,17 +122,17 @@ func convertN(s string, numRows int) string {
 			}
 		}
 
-		rowIndex --
+		rowIndex--
 	}
 
 	return newStr
 }
 
-//整数反转
+// 整数反转
 func reverse(x int) int {
 	var num int
 	for x != 0 {
-		num = num * 10 + x % 10
+		num = num*10 + x%10
 		x /= 10
 	}
 
@@ -165,11 +165,11 @@ func myAtoi(s string) int {
 		if s[index] < 48 || s[index] > 57 {
 			break
 		}
-		result = result * 10 + int(s[index] - '0')
-		if result * pos >= math.MaxInt32 {
+		result = result*10 + int(s[index]-'0')
+		if result*pos >= math.MaxInt32 {
 			return math.MaxInt32
 		}
-		if result * pos <= math.MinInt32 {
+		if result*pos <= math.MinInt32 {
 			return math.MinInt32
 		}
 	}
@@ -177,20 +177,20 @@ func myAtoi(s string) int {
 	return result * pos
 }
 
-//回文数校验；不使用字符串
-//-2^31 <= x <= 2^31 - 1
+// 回文数校验；不使用字符串
+// -2^31 <= x <= 2^31 - 1
 func isPalindrome(x int) bool {
 	if x == 0 {
 		return true
 	} else if x < 0 {
 		return false
-	} else if x % 10 == 0 {
+	} else if x%10 == 0 {
 		return false
 	}
 
 	oriNum, revNum := x, 0
 	for oriNum > 0 {
-		revNum = revNum * 10 + oriNum % 10
+		revNum = revNum*10 + oriNum%10
 		oriNum = oriNum / 10
 	}
 
@@ -206,9 +206,9 @@ func isPalindrome(x int) bool {
 	//return x == revertedNumber || x == revertedNumber / 10
 }
 
-//盛最多水的容器
+// 盛最多水的容器
 func maxArea(height []int) int {
-	left, right := 0, len(height) - 1
+	left, right := 0, len(height)-1
 	if right <= 0 {
 		return 0
 	}
@@ -230,34 +230,34 @@ func maxArea(height []int) int {
 		}
 
 		if height[left] > height[right] {
-			right --
+			right--
 		} else {
-			left ++
+			left++
 		}
 	}
 
 	return maxA
 }
 
-//整数转罗马数字 1 <= num <= 3999
-//字符          数值
-//I             1
-//V             5
-//X             10
-//L             50
-//C             100
-//D             500
-//M             1000
+// 整数转罗马数字 1 <= num <= 3999
+// 字符          数值
+// I             1
+// V             5
+// X             10
+// L             50
+// C             100
+// D             500
+// M             1000
 func intToRoman(num int) string {
 	thousands := []string{"", "M", "MM", "MMM"}
-	hundreds  := []string{"", "C", "CC", "CCC", "CD", "D", "DC", "DCC", "DCCC", "CM"}
-	tens      := []string{"", "X", "XX", "XXX", "XL", "L", "LX", "LXX", "LXXX", "XC"}
-	ones      := []string{"", "I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX"}
+	hundreds := []string{"", "C", "CC", "CCC", "CD", "D", "DC", "DCC", "DCCC", "CM"}
+	tens := []string{"", "X", "XX", "XXX", "XL", "L", "LX", "LXX", "LXXX", "XC"}
+	ones := []string{"", "I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX"}
 
-	return thousands[num / 1000] + hundreds[num % 1000 / 100] + tens[num % 100 / 10] + ones[num % 10]
+	return thousands[num/1000] + hundreds[num%1000/100] + tens[num%100/10] + ones[num%10]
 }
 
-//最长公共前缀 1 <= strs.length <= 200
+// 最长公共前缀 1 <= strs.length <= 200
 func longestCommonPrefix(strs []string) string {
 	length := len(strs)
 	if length == 0 {
@@ -272,12 +272,12 @@ func longestCommonPrefix(strs []string) string {
 		}
 		mid := (start + end) / 2
 		left := lcp(start, mid)
-		right := lcp(mid + 1, end)
+		right := lcp(mid+1, end)
 		minLen := len(left)
 		if len(left) > len(right) {
 			minLen = len(right)
 		}
-		for i := 0; i < minLen; i++{
+		for i := 0; i < minLen; i++ {
 			if left[i] != right[i] {
 				return left[:i]
 			}
@@ -285,10 +285,10 @@ func longestCommonPrefix(strs []string) string {
 		return left[:minLen]
 	}
 
-	return lcp(0, length - 1)
+	return lcp(0, length-1)
 }
 
-//三数之和为0
+// 三数之和为0
 func threeSum(nums []int) [][]int {
 	var results [][]int
 	if len(nums) < 1 {
@@ -300,8 +300,8 @@ func threeSum(nums []int) [][]int {
 		if i > 0 && nums[i] == nums[i-1] {
 			continue
 		}
-		j := i+1
-		k := len(nums)-1
+		j := i + 1
+		k := len(nums) - 1
 		for j < len(nums)-1 && j < k {
 			if j > i+1 && nums[j] == nums[j-1] {
 				j++
@@ -324,7 +324,7 @@ func threeSum(nums []int) [][]int {
 		}
 	}
 
-	return  results
+	return results
 }
 
 func threeSumClosest(nums []int, target int) int {
@@ -335,8 +335,8 @@ func threeSumClosest(nums []int, target int) int {
 		if i > 0 && nums[i] == nums[i-1] {
 			continue
 		}
-		j := i+1
-		k := len(nums)-1
+		j := i + 1
+		k := len(nums) - 1
 		for j < len(nums)-1 && j < k {
 			if j > i+1 && nums[j] == nums[j-1] {
 				j++
@@ -367,7 +367,7 @@ func threeSumClosest(nums []int, target int) int {
 	return result
 }
 
-//电话号码的字母组合
+// 电话号码的字母组合
 func letterCombinations(digits string) []string {
 	if len(digits) == 0 {
 		return []string{}
@@ -384,7 +384,7 @@ func letterCombinations(digits string) []string {
 	}
 
 	var comb func(start, end int) []string
-	comb = func(start, end int) []string{
+	comb = func(start, end int) []string {
 		if start == end {
 			num := string(digits[start])
 			return mapping[num]
@@ -395,8 +395,8 @@ func letterCombinations(digits string) []string {
 		leftStrList := comb(start, mid)
 		rightStrList := comb(mid+1, end)
 		for _, l := range leftStrList {
-			for _, r := range rightStrList{
-				strList = append(strList, l + r)
+			for _, r := range rightStrList {
+				strList = append(strList, l+r)
 			}
 		}
 		return strList
@@ -413,10 +413,6 @@ func fourSum(nums []int, target int) [][]int {
  * Definition for singly-linked list.
  * 进阶：你能尝试使用一趟扫描实现吗？
  */
-type ListNode struct {
-	Val int
-	Next *ListNode
-}
 func removeNthFromEnd(head *ListNode, n int) *ListNode {
 	first := head
 	sec := head
@@ -440,7 +436,7 @@ func removeNthFromEnd(head *ListNode, n int) *ListNode {
 	return head
 }
 
-//有效括号
+// 有效括号
 func isValid(s string) bool {
 	var stack []int32
 	for _, v := range s {
@@ -529,10 +525,10 @@ func generateParenthesis(n int) []string {
 		}
 
 		if l < n {
-			dfs(n, l + 1, r, path + "(")
+			dfs(n, l+1, r, path+"(")
 		}
 		if r < l {
-			dfs(n, l, r + 1, path + ")")
+			dfs(n, l, r+1, path+")")
 		}
 	}
 
@@ -581,11 +577,11 @@ func mergeKLists(lists []*ListNode) *ListNode {
 		}
 		mid := (start + end) / 2
 		left := binMerge(start, mid)
-		right := binMerge(mid + 1, end)
+		right := binMerge(mid+1, end)
 		return mergeTwoList(left, right)
 	}
 
-	return binMerge(0, len(lists) - 1)
+	return binMerge(0, len(lists)-1)
 }
 
 /**两两交换链表中的节点
@@ -611,14 +607,14 @@ func swapPairs(head *ListNode) *ListNode {
 	return dummyNode.Next
 }
 
-//移除元素 原地移除，空间O1
+// 移除元素 原地移除，空间O1
 func removeElement(nums []int, val int) int {
 	length := len(nums)
 	if length == 0 {
 		return 0
 	}
 
-	start, end := 0, len(nums) - 1
+	start, end := 0, len(nums)-1
 	for start <= end {
 		if nums[start] != val {
 			start++
@@ -633,5 +629,5 @@ func removeElement(nums []int, val int) int {
 		}
 	}
 
-	return end+1
+	return end + 1
 }
