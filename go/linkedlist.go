@@ -288,3 +288,43 @@ func connect(root *Node) *Node {
 	doConn(root)
 	return root
 }
+
+// 117. 填充每个节点的下一个右侧节点指针 II
+func connect2(root *Node) *Node {
+	var doConn func(*Node)
+	doConn = func(node *Node) {
+		if node == nil {
+			return
+		}
+
+		// [1,2,3,4,5,null,6,7,null,null,null,null,8]
+		// 拿到本层右边子树的第一个不为nil的节点
+		var rightNode *Node
+		next := node.Next
+		for next != nil {
+			if next.Left != nil {
+				rightNode = next.Left
+				break
+			}
+			if next.Right != nil {
+				rightNode = next.Right
+				break
+			}
+			next = next.Next
+		}
+
+		if node.Right != nil {
+			node.Right.Next = rightNode
+			rightNode = node.Right
+		}
+		if node.Left != nil {
+			node.Left.Next = rightNode
+		}
+
+		doConn(node.Right)
+		doConn(node.Left)
+	}
+
+	doConn(root)
+	return root
+}
