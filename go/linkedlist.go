@@ -473,3 +473,22 @@ func sortList(head *ListNode) *ListNode {
 
 	return mergeSort(head)
 }
+
+// 160. 相交链表
+func getIntersectionNode(headA, headB *ListNode) *ListNode {
+	p, q := headA, headB
+	for p != q {
+		p, q = p.Next, q.Next
+		if p == nil && q == nil {
+			return nil
+		}
+
+		if p == nil {
+			p = headB
+		}
+		if q == nil {
+			q = headA
+		}
+	}
+	return p
+}
