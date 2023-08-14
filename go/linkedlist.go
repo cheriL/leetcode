@@ -394,3 +394,28 @@ func reorderList(head *ListNode) {
 		}
 	}
 }
+
+// 147. 对链表进行插入排序
+func insertionSortList(head *ListNode) *ListNode {
+	dummyNode := &ListNode{
+		Val:  -5001,
+		Next: nil,
+	}
+
+	for head != nil {
+		val := head.Val
+		p := dummyNode
+		for p.Next != nil && val > p.Next.Val {
+			p = p.Next
+		}
+		node := &ListNode{
+			Val:  val,
+			Next: p.Next,
+		}
+		p.Next = node
+
+		head = head.Next
+	}
+
+	return dummyNode.Next
+}
