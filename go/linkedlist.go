@@ -349,3 +349,48 @@ func hasCycle(head *ListNode) bool {
 
 	return false
 }
+
+// 142. 环形链表 II
+func detectCycle(head *ListNode) *ListNode {
+	nodeSet := make(map[*ListNode]struct{})
+	p := head
+	for p != nil {
+		if _, ok := nodeSet[p]; ok {
+			return p
+		}
+		nodeSet[p] = struct{}{}
+		p = p.Next
+	}
+	return nil
+}
+
+// 143. 重排链表
+func reorderList(head *ListNode) {
+	p, length := head, 0
+	for p != nil {
+		length += 1
+		p = p.Next
+	}
+
+	//nodeSet := make(map[*ListNode]struct{})
+
+	p = head
+	for i := 0; i < (length+1)/2; i++ {
+
+		q := p
+		for j := 1; j < length-i*2; j++ {
+			q = q.Next
+		}
+
+		if q == p {
+			p.Next = nil
+		} else if q == p.Next {
+			q.Next = nil
+		} else {
+			temp := p.Next
+			p.Next = q
+			q.Next = temp
+			p = temp
+		}
+	}
+}
