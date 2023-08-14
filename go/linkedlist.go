@@ -509,3 +509,43 @@ func removeElements(head *ListNode, val int) *ListNode {
 	}
 	return dummyNode.Next
 }
+
+// 234. 回文链表
+func isPalindrome1(head *ListNode) bool {
+	if head == nil || head.Next == nil {
+		return true
+	}
+	dummyNode := &ListNode{Next: head}
+	s, f := dummyNode, dummyNode
+	for f != nil && f.Next != nil {
+		s = s.Next
+		f = f.Next.Next
+	}
+
+	p, q := s, s.Next
+	for q != nil {
+		next := q.Next
+		q.Next = p
+		p = q
+		q = next
+	}
+	q = p
+	p = head
+	for {
+		if p == q {
+			break
+		}
+
+		if p.Val != q.Val {
+			return false
+		}
+
+		if p.Next == q && q.Next == p {
+			break
+		}
+
+		p = p.Next
+		q = q.Next
+	}
+	return true
+}
