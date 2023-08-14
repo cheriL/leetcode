@@ -419,3 +419,57 @@ func insertionSortList(head *ListNode) *ListNode {
 
 	return dummyNode.Next
 }
+
+// 148. 排序链表
+func sortList(head *ListNode) *ListNode {
+	mergeFunc := func(left *ListNode, right *ListNode) *ListNode {
+		dummyNode := &ListNode{}
+		p, q, k := left, right, dummyNode
+		for {
+			if p == nil {
+				k.Next = q
+				break
+			}
+			if q == nil {
+				k.Next = p
+				break
+			}
+			if p.Val < q.Val {
+				node := &ListNode{Val: p.Val}
+				k.Next = node
+				k = k.Next
+				p = p.Next
+			} else {
+				node := &ListNode{Val: q.Val}
+				k.Next = node
+				k = k.Next
+				q = q.Next
+			}
+		}
+		return dummyNode.Next
+	}
+
+	var mergeSort func(*ListNode) *ListNode
+	mergeSort = func(head *ListNode) *ListNode {
+		if head == nil || head.Next == nil {
+			return head
+		}
+
+		p, length := head, 0
+		for p != nil {
+			length++
+			p = p.Next
+		}
+		mid := head
+		for i := 1; i < length/2; i++ {
+			mid = mid.Next
+		}
+
+		rightList := mergeSort(mid.Next)
+		mid.Next = nil
+		leftList := mergeSort(head)
+		return mergeFunc(leftList, rightList)
+	}
+
+	return mergeSort(head)
+}
