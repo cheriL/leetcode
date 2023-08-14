@@ -492,3 +492,20 @@ func getIntersectionNode(headA, headB *ListNode) *ListNode {
 	}
 	return p
 }
+
+// 203. 移除链表元素
+func removeElements(head *ListNode, val int) *ListNode {
+	dummyNode := &ListNode{Next: head}
+	p, q := dummyNode, dummyNode.Next
+	for q != nil {
+		if q.Val == val {
+			p.Next = q.Next
+			q = nil
+			q = p.Next
+		} else {
+			p = q
+			q = q.Next
+		}
+	}
+	return dummyNode.Next
+}
