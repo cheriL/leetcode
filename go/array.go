@@ -234,3 +234,40 @@ func isValidSudoku(board [][]byte) bool {
 	}
 	return true
 }
+
+// 37
+func solveSudoku(board [][]byte) {
+
+}
+
+// 46. 全排列
+func permute(nums []int) [][]int {
+	var results [][]int
+	var track []int
+	used := make(map[int]struct{})
+
+	var backTrack func([]int, []int, map[int]struct{}, *[][]int)
+	backTrack = func(nums []int, track []int, used map[int]struct{}, results *[][]int) {
+		if len(track) == len(nums) {
+			result := make([]int, len(track))
+			copy(result, track)
+			*results = append(*results, result)
+			return
+		}
+
+		for _, v := range nums {
+			if _, ok := used[v]; ok {
+				continue
+			}
+
+			used[v] = struct{}{}
+			track = append(track, v)
+			backTrack(nums, track, used, results)
+			track = track[:len(track)-1]
+			delete(used, v)
+		}
+	}
+
+	backTrack(nums, track, used, &results)
+	return results
+}
