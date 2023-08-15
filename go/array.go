@@ -210,3 +210,27 @@ func nextPermutation(nums []int) {
 		}
 	}
 }
+
+// 36. 有效的数独
+func isValidSudoku(board [][]byte) bool {
+	var rowSet [9][9]byte
+	var colSet [9][9]byte
+	var boxSet [9][9]byte
+
+	for i, row := range board {
+		for k, v := range row {
+			if v == '.' {
+				continue
+			}
+			val := v - '1'
+			rowSet[i][val] += 1
+			colSet[k][val] += 1
+			boxIndex := i/3*3 + k/3
+			boxSet[boxIndex][val] += 1
+			if rowSet[i][val] > 1 || colSet[k][val] > 1 || boxSet[boxIndex][val] > 1 {
+				return false
+			}
+		}
+	}
+	return true
+}
