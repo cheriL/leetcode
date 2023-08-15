@@ -114,3 +114,16 @@ func fourSum(nums []int, target int) [][]int {
 	}
 	return results
 }
+
+// 26. 删除有序数组中的重复项
+func removeDuplicates(nums []int) int {
+	index := 1
+	for i := 1; i < len(nums); {
+		if nums[i] != nums[i-1] {
+			nums[index] = nums[i]
+			index++
+		}
+		i++
+	}
+	return index
+}
