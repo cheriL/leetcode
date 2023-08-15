@@ -1,4 +1,8 @@
+//https://leetcode.cn/tag/array/problemset/
+
 package _go
+
+import "sort"
 
 // 4. 寻找两个正序数组的中位数
 func findMedianSortedArrays(nums1 []int, nums2 []int) float64 {
@@ -126,4 +130,83 @@ func removeDuplicates(nums []int) int {
 		i++
 	}
 	return index
+}
+
+// 31. 下一个排列
+func nextPermutation(nums []int) {
+	if len(nums) <= 1 {
+		return
+	}
+	//指定范围内寻找最大值
+	findMaxIndex := func(nums []int, start, end int) int {
+		index, max := -1, -1
+		for i := start; i < end && i < len(nums); i++ {
+			if nums[i] > max {
+				max = nums[i]
+				index = i
+			}
+		}
+		return index
+	}
+
+	//判断是否降序; 及获取指定范围内比 target 大的值中最小的值（刚好大于target）的index
+	isDesc := func(nums []int, start, end int, target int) (bool, int) {
+		flag := true
+		curr := nums[start]
+		just, justIndex := 101, -1
+		for i := start; i < end && i < len(nums); i++ {
+			if nums[i] > curr {
+				flag = false
+			}
+			curr = nums[i]
+			if nums[i] > target && nums[i] < just {
+				just = nums[i]
+				justIndex = i
+			}
+		}
+		return flag, justIndex
+	}
+
+	//在[start,end)中找最大值的index:
+	//	*index==end-1:直接交换末尾两个值；
+	//   *index==start:判断范围内是否为降序，如果是，则直接生序排序；否则start=start+1，循环执行；
+	//	*index==x:判断[x,end)范围内是否降序，并获取该范围内刚好比nums[index-1]大的值的justIndex:
+	//		*如果降序，且存在justIndex，将justIndex与index-1的值交换，对[index,end)做升序排序；
+	//       *如果降序，但不存在justIndex，将index与index-1的值交换，对[index,end)做升序排序；
+	//       *如果非降序，start=index+1,循环执行；
+	index, flag := -1, false
+	for start, end := 0, len(nums); !flag; {
+		index = findMaxIndex(nums, start, end)
+		switch index {
+		case end - 1:
+			nums[index], nums[index-1] = nums[index-1], nums[index]
+			flag = true
+		case start:
+			desc, _ := isDesc(nums, start, end, -1)
+			if desc {
+				sort.Ints(nums)
+				flag = true
+			} else {
+				start += 1
+				index = findMaxIndex(nums, start, end)
+			}
+		default:
+			leftVal := nums[index-1]
+			desc, justIndex := isDesc(nums, index+1, end, leftVal)
+			if desc {
+				if justIndex > 0 {
+					nums[justIndex], nums[index-1] = nums[index-1], nums[justIndex]
+					sort.Ints(nums[index:])
+					flag = true
+				} else {
+					nums[index], nums[index-1] = nums[index-1], nums[index]
+					sort.Ints(nums[index:])
+					flag = true
+				}
+			} else {
+				start = index + 1
+				index = findMaxIndex(nums, start, end)
+			}
+		}
+	}
 }
