@@ -405,10 +405,6 @@ func letterCombinations(digits string) []string {
 	return comb(0, len(digits)-1)
 }
 
-func fourSum(nums []int, target int) [][]int {
-	return nil
-}
-
 /**
  * Definition for singly-linked list.
  * 进阶：你能尝试使用一趟扫描实现吗？
