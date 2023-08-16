@@ -235,9 +235,8 @@ func isValidSudoku(board [][]byte) bool {
 	return true
 }
 
-// 37
+// 37 解数独
 func solveSudoku(board [][]byte) {
-
 }
 
 // 46. 全排列
@@ -269,5 +268,41 @@ func permute(nums []int) [][]int {
 	}
 
 	backTrack(nums, track, used, &results)
+	return results
+}
+
+// 39. 组合总和
+func combinationSum(candidates []int, target int) [][]int {
+	var results [][]int
+	var track []int
+	var index int
+	sort.Ints(candidates)
+
+	var backTrack func([]int, []int, int, int, *[][]int)
+	backTrack = func(cand []int, track []int, sum int, index int, res *[][]int) {
+		if sum == target {
+			newRes := make([]int, len(track))
+			copy(newRes, track)
+			*res = append(*res, newRes)
+			return
+		}
+
+		for k, v := range cand {
+			if k < index {
+				continue
+			}
+			sum += v
+			if sum > target {
+				return
+			}
+			track = append(track, v)
+			index = k
+			backTrack(cand, track, sum, index, res)
+			track = track[:len(track)-1]
+			sum -= v
+		}
+	}
+
+	backTrack(candidates, track, 0, index, &results)
 	return results
 }
