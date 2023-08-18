@@ -2,7 +2,9 @@
 
 package _go
 
-import "sort"
+import (
+	"sort"
+)
 
 // 4. 寻找两个正序数组的中位数
 func findMedianSortedArrays(nums1 []int, nums2 []int) float64 {
@@ -304,5 +306,40 @@ func combinationSum(candidates []int, target int) [][]int {
 	}
 
 	backTrack(candidates, track, 0, index, &results)
+	return results
+}
+
+// 40. 组合总和 II
+func CombinationSum2(candidates []int, target int) [][]int {
+	var results [][]int
+	var track []int
+	sort.Ints(candidates)
+
+	var backTrack func([]int, []int, int, int, *[][]int)
+	backTrack = func(cand []int, track []int, sum int, index int, res *[][]int) {
+		for i := index; i < len(cand); i++ {
+			if i > index && cand[i] == cand[i-1] {
+				index++
+				continue
+			}
+			sum += cand[i]
+			if sum > target {
+				return
+			}
+			track = append(track, cand[i])
+
+			if sum == target {
+				newRes := make([]int, len(track))
+				copy(newRes, track)
+				*res = append(*res, newRes)
+				return
+			}
+			backTrack(cand, track, sum, i+1, res)
+			track = track[:len(track)-1]
+			sum -= cand[i]
+		}
+	}
+
+	backTrack(candidates, track, 0, 0, &results)
 	return results
 }
