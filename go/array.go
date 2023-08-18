@@ -3,6 +3,7 @@
 package _go
 
 import (
+	"math"
 	"sort"
 )
 
@@ -310,7 +311,7 @@ func combinationSum(candidates []int, target int) [][]int {
 }
 
 // 40. 组合总和 II
-func CombinationSum2(candidates []int, target int) [][]int {
+func combinationSum2(candidates []int, target int) [][]int {
 	var results [][]int
 	var track []int
 	sort.Ints(candidates)
@@ -342,4 +343,34 @@ func CombinationSum2(candidates []int, target int) [][]int {
 
 	backTrack(candidates, track, 0, 0, &results)
 	return results
+}
+
+// 41. 缺失的第一个正数
+func firstMissingPositive(nums []int) int {
+	//只关心[1,len(nums)]之间的正整数
+	//先将负数置为len(nums)
+	for k, v := range nums {
+		if v <= 0 || v > len(nums) {
+			nums[k] = len(nums) + 1
+		}
+	}
+
+	//再用负数做标记，存在正整数n:1<=n<=len(nums),将下标为n-1的值置为负数
+	for _, v := range nums {
+		index := int(math.Abs(float64(v)) - 1)
+		if index >= 0 && index < len(nums) {
+			val := nums[index]
+			if val > 0 {
+				nums[index] = 0 - nums[index]
+			}
+		}
+	}
+
+	for k, v := range nums {
+		if v > 0 {
+			return k + 1
+		}
+	}
+
+	return len(nums) + 1
 }
