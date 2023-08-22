@@ -439,3 +439,20 @@ func PermuteUnique(nums []int) [][]int {
 	backTrack(nums, track, unused, &results)
 	return results
 }
+
+// 48. 旋转图像
+func rotate(matrix [][]int) {
+	//左右
+	width := len(matrix)
+	for i := 0; i < width; i++ {
+		for j := 0; j < width/2; j++ {
+			matrix[i][j], matrix[i][width-j-1] = matrix[i][width-j-1], matrix[i][j]
+		}
+	}
+
+	for i := 0; i < width-1; i++ {
+		for j := 0; j < width-i; j++ {
+			matrix[i][j], matrix[width-1-j][width-1-i] = matrix[width-1-j][width-1-i], matrix[i][j]
+		}
+	}
+}
