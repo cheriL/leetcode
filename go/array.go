@@ -374,3 +374,68 @@ func firstMissingPositive(nums []int) int {
 
 	return len(nums) + 1
 }
+
+// 45. 跳跃游戏 II
+func jump(nums []int) int {
+	max := func(x, y int) int {
+		if x > y {
+			return x
+		}
+		return y
+	}
+
+	length := len(nums)
+	end := 0
+	maxPosition := 0
+	steps := 0
+	for i := 0; i < length-1; i++ {
+		maxPosition = max(maxPosition, i+nums[i])
+		if i == end {
+			end = maxPosition
+			steps++
+		}
+	}
+	return steps
+}
+
+// 47. 全排列 II todo
+func PermuteUnique(nums []int) [][]int {
+	var results [][]int
+	var track []int
+	unused := map[int]struct{}{}
+	//for _, v := range nums {
+	//	if _, ok := unused[v]; ok {
+	//		unused[v]++
+	//	} else {
+	//		unused[v] = 1
+	//	}
+	//}
+
+	var backTrack func([]int, []int, map[int]struct{}, *[][]int)
+	backTrack = func(nums []int, track []int, unused map[int]struct{}, results *[][]int) {
+		if len(track) == len(nums) {
+			result := make([]int, len(track))
+			copy(result, track)
+			*results = append(*results, result)
+			return
+		}
+
+		for i := 0; i < len(nums); i++ {
+			if _, ok := unused[i]; ok {
+				continue
+			}
+			val := nums[i]
+			track = append(track, val)
+			unused[i] = struct{}{}
+			backTrack(nums, track, unused, results)
+			track = track[:len(track)-1]
+			delete(unused, i)
+			for i+1 < len(nums) && nums[i] == nums[i+1] {
+				i++
+			}
+		}
+	}
+
+	backTrack(nums, track, unused, &results)
+	return results
+}
