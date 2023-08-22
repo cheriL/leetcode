@@ -474,3 +474,46 @@ func maxSubArray(nums []int) int {
 	}
 	return max
 }
+
+// 54. 螺旋矩阵
+func spiralOrder(matrix [][]int) []int {
+	x, y := 0, len(matrix)-1
+	if y >= 0 {
+		x = len(matrix[0]) - 1
+	}
+
+	u, b, l, r := 0, y, 0, x
+	var results []int
+	for {
+		for i := l; i <= r; i++ {
+			results = append(results, matrix[u][i])
+		}
+		u++
+		if u > b {
+			break
+		}
+		for i := u; i <= b; i++ {
+			results = append(results, matrix[i][r])
+		}
+		r--
+		if r < l {
+			break
+		}
+		for i := r; i >= l; i-- {
+			results = append(results, matrix[b][i])
+		}
+		b--
+		if b < u {
+			break
+		}
+		for i := b; i >= u; i-- {
+			results = append(results, matrix[i][l])
+		}
+		l++
+		if l > r {
+			break
+		}
+	}
+
+	return results
+}
