@@ -517,3 +517,44 @@ func spiralOrder(matrix [][]int) []int {
 
 	return results
 }
+
+// 56. 合并区间
+func Merge(intervals [][]int) [][]int {
+	var results [][]int
+	bitMap := make([]byte, 20001)
+
+	for _, interval := range intervals {
+		l, r := interval[0]*2, interval[1]*2
+		for i := l; i <= r; i++ {
+			bitMap[i] = 1
+		}
+	}
+
+	flag := false
+	temp := make([]int, 2)
+	for k, v := range bitMap {
+		if v == 1 {
+			if !flag {
+				temp[0] = k / 2
+				flag = true
+			}
+		} else {
+			if flag {
+				temp[1] = (k - 1) / 2
+				newInterval := make([]int, 2)
+				copy(newInterval, temp)
+				results = append(results, newInterval)
+				temp = make([]int, 2)
+				flag = false
+			}
+		}
+	}
+
+	if flag {
+		temp[1] = 10000
+		results = append(results, temp)
+		flag = false
+	}
+
+	return results
+}
