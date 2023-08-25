@@ -564,7 +564,7 @@ func deleteNode(node *ListNode) {
 
 // 328. 奇偶链表
 // 你必须在 O(1) 的额外空间复杂度和 O(n) 的时间复杂度下解决这个问题
-func OddEvenList(head *ListNode) *ListNode {
+func oddEvenList(head *ListNode) *ListNode {
 	if head == nil || head.Next == nil {
 		return head
 	}
