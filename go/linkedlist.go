@@ -549,3 +549,15 @@ func isPalindrome1(head *ListNode) bool {
 	}
 	return true
 }
+
+// 237. 删除链表中的节点
+func deleteNode(node *ListNode) {
+	if node != nil {
+		if node.Next != nil {
+			node.Val = node.Next.Val
+			temp := node.Next.Next
+			node.Next = nil
+			node.Next = temp
+		}
+	}
+}
