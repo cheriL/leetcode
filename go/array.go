@@ -604,3 +604,49 @@ func insert(intervals [][]int, newInterval []int) [][]int {
 
 	return intervals
 }
+
+// 59. 螺旋矩阵 II
+func generateMatrix(n int) [][]int {
+	results := make([][]int, n)
+	for i := 0; i < n; i++ {
+		results[i] = make([]int, n)
+	}
+	x := 1
+	l, r, u, b := 0, n-1, 0, n-1
+	for {
+		for i := l; i <= r; i++ {
+			results[u][i] = x
+			x++
+		}
+		u++
+		if u > b {
+			break
+		}
+		for i := u; i <= b; i++ {
+			results[i][r] = x
+			x++
+		}
+		r--
+		if r < l {
+			break
+		}
+		for i := r; i >= l; i-- {
+			results[b][i] = x
+			x++
+		}
+		b--
+		if b < u {
+			break
+		}
+		for i := b; i >= u; i-- {
+			results[i][l] = x
+			x++
+		}
+		l++
+		if l > r {
+			break
+		}
+	}
+
+	return results
+}
