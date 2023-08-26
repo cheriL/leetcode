@@ -650,3 +650,24 @@ func generateMatrix(n int) [][]int {
 
 	return results
 }
+
+// 78. 子集
+func subsets(nums []int) [][]int {
+	var results [][]int
+	results = append(results, []int{})
+
+	//从右向左遍历nums，每次将results里的值append到nums[i],再加入results
+	fn := func(results *[][]int) {
+		for i := len(nums) - 1; i >= 0; i-- {
+			curLen := len(*results)
+			for j := 0; j < curLen; j++ {
+				result := append([]int{nums[i]}, (*results)[j]...)
+				*results = append(*results, result)
+			}
+		}
+	}
+
+	fn(&results)
+
+	return results
+}
