@@ -671,3 +671,30 @@ func subsets(nums []int) [][]int {
 
 	return results
 }
+
+// 88. 合并两个有序数组
+func merge1(nums1 []int, m int, nums2 []int, n int) {
+	i, j, k := 0, 0, 0
+	for k < m+n {
+		if i == m {
+			for n > j {
+				nums1[m+n-1-k] = nums2[n-1-j]
+				j++
+				k++
+			}
+			break
+		}
+		if j == n {
+			break
+		}
+
+		if nums1[m-1-i] > nums2[n-1-j] {
+			nums1[m+n-1-k] = nums1[m-1-i]
+			i++
+		} else {
+			nums1[m+n-1-k] = nums2[n-1-j]
+			j++
+		}
+		k++
+	}
+}
