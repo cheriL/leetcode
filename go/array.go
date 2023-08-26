@@ -698,3 +698,38 @@ func merge1(nums1 []int, m int, nums2 []int, n int) {
 		k++
 	}
 }
+
+// 90. 子集 II
+func subsetsWithDup(nums []int) [][]int {
+	sort.Ints(nums)
+	var results [][]int
+	var path []int
+	usedSet := map[int]struct{}{}
+
+	var backTrack func(int, []int, []int, map[int]struct{})
+	backTrack = func(index int, nums []int, path []int, usedSet map[int]struct{}) {
+		result := make([]int, len(path))
+		copy(result, path)
+		results = append(results, result)
+		if index == len(nums) {
+			return
+		}
+
+		for i := index; i < len(nums); i++ {
+			_, used := usedSet[nums[i]]
+			if i > 0 && nums[i] == nums[i-1] && !used {
+				continue
+			}
+
+			path = append(path, nums[i])
+			usedSet[nums[i]] = struct{}{}
+			backTrack(i+1, nums, path, usedSet)
+			delete(usedSet, nums[i])
+			path = path[:len(path)-1]
+		}
+	}
+
+	backTrack(0, nums, path, usedSet)
+
+	return results
+}
