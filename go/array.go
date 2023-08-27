@@ -398,45 +398,39 @@ func jump(nums []int) int {
 	return steps
 }
 
-// 47. 全排列 II todo
-func PermuteUnique(nums []int) [][]int {
+// 47. 全排列 II
+func permuteUnique(nums []int) [][]int {
+	sort.Ints(nums)
 	var results [][]int
 	var track []int
-	unused := map[int]struct{}{}
-	//for _, v := range nums {
-	//	if _, ok := unused[v]; ok {
-	//		unused[v]++
-	//	} else {
-	//		unused[v] = 1
-	//	}
-	//}
+	used := make([]int, len(nums))
 
-	var backTrack func([]int, []int, map[int]struct{}, *[][]int)
-	backTrack = func(nums []int, track []int, unused map[int]struct{}, results *[][]int) {
+	var backTrack func([]int, []int, []int, int)
+	backTrack = func(nums []int, track []int, used []int, index int) {
 		if len(track) == len(nums) {
 			result := make([]int, len(track))
 			copy(result, track)
-			*results = append(*results, result)
+			results = append(results, result)
 			return
 		}
 
 		for i := 0; i < len(nums); i++ {
-			if _, ok := unused[i]; ok {
+			if used[i] == 1 {
+				continue
+			}
+			if i > 0 && nums[i] == nums[i-1] && used[i-1] == 0 {
 				continue
 			}
 			val := nums[i]
 			track = append(track, val)
-			unused[i] = struct{}{}
-			backTrack(nums, track, unused, results)
+			used[i] = 1
+			backTrack(nums, track, used, i)
 			track = track[:len(track)-1]
-			delete(unused, i)
-			for i+1 < len(nums) && nums[i] == nums[i+1] {
-				i++
-			}
+			used[i] = 0
 		}
 	}
 
-	backTrack(nums, track, unused, &results)
+	backTrack(nums, track, used, 0)
 	return results
 }
 
