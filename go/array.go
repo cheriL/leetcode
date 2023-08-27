@@ -751,3 +751,26 @@ func buildTree(preorder []int, inorder []int) *TreeNode {
 
 	return makeTreeFn(preorder, inorder)
 }
+
+// 106. 从中序与后序遍历序列构造二叉树
+func buildTree1(inorder []int, postorder []int) *TreeNode {
+	var makeTreeFn func([]int, []int) *TreeNode
+	makeTreeFn = func(inorder []int, postorder []int) *TreeNode {
+		if len(postorder) == 0 {
+			return nil
+		}
+		rootVal := postorder[len(postorder)-1]
+		node := &TreeNode{Val: rootVal}
+		for i := 0; i < len(inorder); i++ {
+			if inorder[i] == rootVal {
+				node.Right = makeTreeFn(inorder[i+1:], postorder[i:len(postorder)-1])
+				node.Left = makeTreeFn(inorder[:i], postorder[:i])
+
+				break
+			}
+		}
+		return node
+	}
+
+	return makeTreeFn(inorder, postorder)
+}
