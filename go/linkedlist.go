@@ -588,3 +588,69 @@ func oddEvenList(head *ListNode) *ListNode {
 	p.Next = dummyNode.Next
 	return head
 }
+
+// 445. 两数相加 II
+func addTwoNumbers(l1 *ListNode, l2 *ListNode) *ListNode {
+	//转换成数字再相加会溢出
+	//反转链表想加，或栈
+	if l1 == nil && l2 == nil {
+		return &ListNode{Val: 0}
+	}
+
+	var stack1 []int
+	var stack2 []int
+	push := func(stack *[]int, val int) {
+		*stack = append(*stack, val)
+	}
+	pop := func(stack *[]int) int {
+		val := (*stack)[len(*stack)-1]
+		*stack = (*stack)[:len(*stack)-1]
+		return val
+	}
+
+	for ; l1 != nil; l1 = l1.Next {
+		push(&stack1, l1.Val)
+	}
+	for ; l2 != nil; l2 = l2.Next {
+		push(&stack2, l2.Val)
+	}
+	dummyNode := &ListNode{}
+	appendNode := func(val int) {
+		node := &ListNode{
+			Val:  val,
+			Next: dummyNode.Next,
+		}
+		dummyNode.Next = node
+	}
+	flag := 0
+	for {
+		x, y := pop(&stack1), pop(&stack2)
+		sum := x + y + flag
+		val := sum % 10
+		flag = sum / 10
+		appendNode(val)
+		if len(stack1) == 0 {
+			for len(stack2) > 0 {
+				sum := pop(&stack2) + flag
+				val := sum % 10
+				flag = sum / 10
+				appendNode(val)
+			}
+			break
+		}
+		if len(stack2) == 0 {
+			for len(stack1) > 0 {
+				sum := pop(&stack1) + flag
+				val := sum % 10
+				flag = sum / 10
+				appendNode(val)
+			}
+			break
+		}
+	}
+	if flag > 0 {
+		appendNode(flag)
+	}
+
+	return dummyNode.Next
+}
