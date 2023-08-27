@@ -727,3 +727,27 @@ func subsetsWithDup(nums []int) [][]int {
 
 	return results
 }
+
+// 105. 从前序与中序遍历序列构造二叉树
+func buildTree(preorder []int, inorder []int) *TreeNode {
+	var makeTreeFn func([]int, []int) *TreeNode
+	makeTreeFn = func(preorder []int, inorder []int) *TreeNode {
+		if len(preorder) == 0 {
+			return nil
+		}
+		rootVal := preorder[0]
+		node := &TreeNode{Val: preorder[0]}
+		if len(preorder) > 1 {
+			for i := 0; i < len(inorder); i++ {
+				if inorder[i] == rootVal {
+					node.Left = makeTreeFn(preorder[1:i+1], inorder[:i])
+					node.Right = makeTreeFn(preorder[i+1:], inorder[i+1:])
+					break
+				}
+			}
+		}
+		return node
+	}
+
+	return makeTreeFn(preorder, inorder)
+}
