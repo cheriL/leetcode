@@ -774,3 +774,20 @@ func buildTree1(inorder []int, postorder []int) *TreeNode {
 
 	return makeTreeFn(inorder, postorder)
 }
+
+// 80. 删除有序数组中的重复项 II
+func removeDuplicates1(nums []int) int {
+	length := len(nums)
+	if length <= 2 {
+		return length
+	}
+	length = 2
+	for i := 2; i < len(nums); i++ {
+		if nums[i] == nums[length-2] {
+		} else {
+			nums[length] = nums[i]
+			length++
+		}
+	}
+	return length
+}
