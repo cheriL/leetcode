@@ -791,3 +791,26 @@ func removeDuplicates1(nums []int) int {
 	}
 	return length
 }
+
+// 108. 将有序数组转换为二叉搜索树
+func SortedArrayToBST(nums []int) *TreeNode {
+	var makeTreeFn func(int, int) *TreeNode
+	makeTreeFn = func(l, r int) *TreeNode {
+		if r < 0 || l > r {
+			return nil
+		}
+		if l == r {
+			return &TreeNode{Val: nums[l]}
+		}
+
+		mid := (r + l) / 2
+		node := &TreeNode{
+			Val:   nums[mid],
+			Left:  makeTreeFn(l, mid-1),
+			Right: makeTreeFn(mid+1, r),
+		}
+		return node
+	}
+
+	return makeTreeFn(0, len(nums)-1)
+}
