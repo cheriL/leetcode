@@ -814,3 +814,52 @@ func SortedArrayToBST(nums []int) *TreeNode {
 
 	return makeTreeFn(0, len(nums)-1)
 }
+
+// 128. 最长连续序列
+func longestConsecutive(nums []int) int {
+	if len(nums) <= 1 {
+		return len(nums)
+	}
+
+	//分别记录 头--尾 和 尾--头 迭代更新范围
+	start2End := map[int]int{}
+	end2Start := map[int]int{}
+	for i := 0; i < len(nums); i++ {
+		val := nums[i]
+		if _, ok := start2End[val]; ok {
+			continue
+		} else {
+			start2End[val] = val
+			end2Start[val] = val
+		}
+
+		front, behind := val-1, val+1
+		if start, ok := end2Start[front]; ok {
+			start2End[start] = val
+			end2Start[val] = start
+			//delete(end2Start, front)
+		}
+
+		if end, ok := start2End[behind]; ok {
+			start2End[val] = end
+			end2Start[end] = val
+			//delete(start2End, behind)
+		}
+		start, ok1 := end2Start[val]
+		end, ok2 := start2End[val]
+		if ok1 && ok2 {
+			start2End[start] = end
+			end2Start[end] = start
+			//delete(start2End, val)
+			//delete(end2Start, val)
+		}
+	}
+
+	length := 1
+	for k, v := range start2End {
+		if val := v - k + 1; val > length {
+			length = val
+		}
+	}
+	return length
+}
