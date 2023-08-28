@@ -1,6 +1,8 @@
 // Package _go https://leetcode.cn/tag/linked-list/problemset/
 package _go
 
+import "math/rand"
+
 // 86. 分隔链表
 func partition(head *ListNode, x int) *ListNode {
 	dummyNode1 := &ListNode{
@@ -653,4 +655,18 @@ func addTwoNumbers(l1 *ListNode, l2 *ListNode) *ListNode {
 	}
 
 	return dummyNode.Next
+}
+
+// 382.
+func GetRandom(head *ListNode) int {
+	res := 0
+	for p, i := head, 1; p != nil; p = p.Next {
+		//[0, n)
+		val := rand.Intn(i)
+		if val == 0 {
+			res = p.Val
+		}
+		i++
+	}
+	return res
 }
