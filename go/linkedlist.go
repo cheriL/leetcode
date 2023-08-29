@@ -705,3 +705,39 @@ func nextLargerNodes(head *ListNode) []int {
 	}
 	return results
 }
+
+// 1171. 从链表中删去总和值为零的连续节点
+func removeZeroSumSublists(head *ListNode) *ListNode {
+	pre, p := head, head
+	for p != nil {
+		q := p.Next
+		sum := p.Val
+		if sum == 0 {
+			if head == p {
+				head = p.Next
+			}
+			pre.Next = p.Next
+			p = p.Next
+			continue
+		}
+		for q != nil {
+			sum += q.Val
+			if sum == 0 {
+				break
+			}
+			q = q.Next
+		}
+		if q != nil {
+			if head == p {
+				head, pre, p = q.Next, q.Next, q.Next
+			} else {
+				pre.Next = q.Next
+			}
+			p = q.Next
+		} else {
+			pre = p
+			p = p.Next
+		}
+	}
+	return head
+}
