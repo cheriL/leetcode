@@ -872,3 +872,49 @@ func singleNumber(nums []int) int {
 	}
 	return num
 }
+
+// 509. 斐波那契数
+func fib(n int) int {
+	if n == 0 || n == 1 {
+		return n
+	}
+	//1.暴力破解
+	//return fib(n-1) + fib(n-2)
+
+	//2.备忘录解决[重叠子问题]
+	//memo := make([]int, n+1)
+	//var dp func([]int, int) int
+	//dp = func(memo []int, n int) int {
+	//	if n == 0 || n == 1 {
+	//		return n
+	//	}
+	//	if memo[n] > 0 {
+	//		return memo[n]
+	//	}
+	//	memo[n] = dp(memo, n-2) + dp(memo, n-1)
+	//	return memo[n]
+	//}
+	//return dp(memo, n)
+
+	// 3. 数组迭代
+	//memo := make([]int, n+1)
+	//memo[0], memo[1] = 0, 1
+	//for i := 2; i < n+1; i++ {
+	//	memo[i] = memo[i-2] + memo[i-1]
+	//}
+	//return memo[n]
+
+	// 4. 滚动更新优化空间复杂度
+	dp1, dp2 := 0, 1
+	for i := 2; i < n+1; i++ {
+		dpt := dp1 + dp2
+		dp1 = dp2
+		dp2 = dpt
+	}
+	return dp2
+}
+
+// 139. 单词拆分
+func wordBreak(s string, wordDict []string) bool {
+
+}
