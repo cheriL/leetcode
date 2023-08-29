@@ -741,3 +741,13 @@ func removeZeroSumSublists(head *ListNode) *ListNode {
 	}
 	return head
 }
+
+// 1290. 二进制链表转整数
+func getDecimalValue(head *ListNode) int {
+	num := 0
+	for head != nil {
+		num = num*2 + head.Val
+		head = head.Next
+	}
+	return num
+}
