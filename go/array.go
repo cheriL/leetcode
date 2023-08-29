@@ -915,7 +915,7 @@ func fib(n int) int {
 }
 
 // 322. 零钱兑换
-func CoinChange(coins []int, amount int) int {
+func coinChange(coins []int, amount int) int {
 	if amount == 0 {
 		return 0
 	}
@@ -943,7 +943,30 @@ func CoinChange(coins []int, amount int) int {
 	return dp[amount]
 }
 
-// 139. 单词拆分
-func wordBreak(s string, wordDict []string) bool {
-	return true
+// 139. 单词拆分 1 <= s.length <= 300
+func WordBreak(s string, wordDict []string) bool {
+	length := len(s)
+	//对于下标i，值为“子串s[:i+1]的能拼接出来的最长子串点位j”
+	dp := make([]bool, length)
+	for i := 0; i < length; i++ {
+		res := false
+		str := s[:i+1]
+		for _, word := range wordDict {
+			if len(word) > i+1 {
+				continue
+			}
+			if str == word {
+				res = true
+				break
+			}
+			if str[i+1-len(word):] == word {
+				res = dp[i-len(word)]
+				if res == true {
+					break
+				}
+			}
+		}
+		dp[i] = res
+	}
+	return dp[length-1]
 }
