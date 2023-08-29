@@ -863,3 +863,12 @@ func longestConsecutive(nums []int) int {
 	}
 	return length
 }
+
+// 136. 只出现一次的数字
+func singleNumber(nums []int) int {
+	num := 0
+	for _, v := range nums {
+		num = num ^ v
+	}
+	return num
+}
