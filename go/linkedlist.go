@@ -1,7 +1,9 @@
 // Package _go https://leetcode.cn/tag/linked-list/problemset/
 package _go
 
-import "math/rand"
+import (
+	"math/rand"
+)
 
 // 86. 分隔链表
 func partition(head *ListNode, x int) *ListNode {
@@ -683,4 +685,23 @@ func middleNode(head *ListNode) *ListNode {
 		q = q.Next.Next
 	}
 	return p.Next
+}
+
+// 1019. 链表中的下一个更大节点
+func nextLargerNodes(head *ListNode) []int {
+	var results []int
+	p := head
+	for p != nil {
+		res, q := 0, p.Next
+		for q != nil {
+			if q.Val > p.Val {
+				res = q.Val
+				break
+			}
+			q = q.Next
+		}
+		p = p.Next
+		results = append(results, res)
+	}
+	return results
 }
