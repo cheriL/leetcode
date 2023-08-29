@@ -670,3 +670,17 @@ func GetRandom(head *ListNode) int {
 	}
 	return res
 }
+
+// 876. 链表的中间结点
+func middleNode(head *ListNode) *ListNode {
+	if head == nil || head.Next == nil {
+		return head
+	}
+
+	p, q := head, head.Next.Next
+	for q != nil && q.Next != nil {
+		p = p.Next
+		q = q.Next.Next
+	}
+	return p.Next
+}

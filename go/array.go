@@ -944,7 +944,7 @@ func coinChange(coins []int, amount int) int {
 }
 
 // 139. 单词拆分 1 <= s.length <= 300
-func WordBreak(s string, wordDict []string) bool {
+func wordBreak(s string, wordDict []string) bool {
 	length := len(s)
 	//对于下标i，值为“子串s[:i+1]的能拼接出来的最长子串点位j”
 	dp := make([]bool, length)
