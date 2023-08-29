@@ -751,3 +751,39 @@ func getDecimalValue(head *ListNode) int {
 	}
 	return num
 }
+
+// 1367. 二叉树中的链表
+func isSubPath(head *ListNode, root *TreeNode) bool {
+	var validateTree func(*TreeNode, *ListNode) bool
+	var validateOne func(*TreeNode, *ListNode) bool
+
+	validateOne = func(treeNode *TreeNode, listNode *ListNode) bool {
+		if listNode == nil {
+			return true
+		}
+		if treeNode == nil {
+			return false
+		}
+		if treeNode.Val != listNode.Val {
+			return false
+		}
+		return validateOne(treeNode.Left, listNode.Next) || validateOne(treeNode.Right, listNode.Next)
+	}
+
+	validateTree = func(treeNode *TreeNode, listNode *ListNode) bool {
+		if listNode == nil {
+			return true
+		}
+		if treeNode == nil {
+			return false
+		}
+
+		if validateOne(treeNode, listNode) {
+			return true
+		}
+
+		return validateTree(treeNode.Left, listNode) || validateTree(treeNode.Right, listNode)
+	}
+
+	return validateTree(root, head)
+}
