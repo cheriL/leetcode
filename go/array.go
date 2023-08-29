@@ -914,7 +914,36 @@ func fib(n int) int {
 	return dp2
 }
 
+// 322. 零钱兑换
+func CoinChange(coins []int, amount int) int {
+	if amount == 0 {
+		return 0
+	}
+	min := func(a, b int) int {
+		if a < b {
+			return a
+		}
+		return b
+	}
+	dp := make([]int, amount+1)
+	dp[0] = 0
+	for i := 1; i < amount+1; i++ {
+		res := math.MaxInt32
+		for _, coin := range coins {
+			a := i - coin
+			if a >= 0 && dp[a] >= 0 {
+				res = min(res, dp[a]+1)
+			}
+		}
+		if res == math.MaxInt32 {
+			res = -1
+		}
+		dp[i] = res
+	}
+	return dp[amount]
+}
+
 // 139. 单词拆分
 func wordBreak(s string, wordDict []string) bool {
-
+	return true
 }
