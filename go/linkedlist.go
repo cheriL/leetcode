@@ -812,3 +812,33 @@ func mergeInBetween(list1 *ListNode, a int, b int, list2 *ListNode) *ListNode {
 	}
 	return list1
 }
+
+// 1721. 交换链表中的节点
+func swapNodes(head *ListNode, k int) *ListNode {
+	if head == nil {
+		return nil
+	}
+
+	var resHead *ListNode
+	p, length := head, 0
+	for p != nil {
+		length++
+		node := &ListNode{
+			Val:  p.Val,
+			Next: resHead,
+		}
+		resHead = node
+		p = p.Next
+	}
+
+	p = head
+	q := resHead
+	for i := 1; p != nil; i++ {
+		if i == k || i == length-k+1 {
+			p.Val = q.Val
+		}
+		p = p.Next
+		q = q.Next
+	}
+	return head
+}
