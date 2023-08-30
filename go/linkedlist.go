@@ -842,3 +842,30 @@ func swapNodes(head *ListNode, k int) *ListNode {
 	}
 	return head
 }
+
+// 2095. 删除链表的中间节点
+func deleteMiddle(head *ListNode) *ListNode {
+	if head == nil || head.Next == nil {
+		return nil
+	}
+
+	length := 0
+	for p := head; p != nil; p = p.Next {
+		length++
+	}
+	midIdx := length / 2
+	p, q := head, head.Next
+	for i := 1; i < midIdx; i++ {
+		p = q
+		q = q.Next
+	}
+
+	if q != nil {
+		p.Next = q.Next
+	} else {
+		p.Next = nil
+	}
+	q = nil
+
+	return head
+}
