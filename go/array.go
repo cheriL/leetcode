@@ -970,3 +970,29 @@ func wordBreak(s string, wordDict []string) bool {
 	}
 	return dp[length-1]
 }
+
+// 152. 乘积最大子数组 1 <= nums.length <= 2 * 104
+func maxProduct(nums []int) int {
+	maxFn := func(a, b int) int {
+		if a > b {
+			return a
+		}
+		return b
+	}
+	minFn := func(a, b int) int {
+		if a > b {
+			return b
+		}
+		return a
+	}
+
+	res, dpMax, dpMin := nums[0], nums[0], nums[0]
+	for i := 1; i < len(nums); i++ {
+		mx, mi := dpMax, dpMin
+		dpMax = maxFn(mx*nums[i], maxFn(mi*nums[i], nums[i]))
+		dpMin = minFn(mi*nums[i], minFn(mx*nums[i], nums[i]))
+		res = maxFn(dpMax, res)
+	}
+
+	return res
+}
