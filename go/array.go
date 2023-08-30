@@ -996,3 +996,24 @@ func maxProduct(nums []int) int {
 
 	return res
 }
+
+// 153. 寻找旋转排序数组中的最小值
+func findMin(nums []int) int {
+	var binarySearch func(l, r int) int
+	binarySearch = func(l, r int) int {
+		if l > r {
+			return math.MaxInt32
+		}
+		if l == r {
+			return nums[l]
+		}
+		mid := (l + r) / 2
+		leftMin := binarySearch(l, mid)
+		rightMin := binarySearch(mid+1, r)
+		if leftMin < rightMin {
+			return leftMin
+		}
+		return rightMin
+	}
+	return binarySearch(0, len(nums)-1)
+}
