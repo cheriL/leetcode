@@ -1017,3 +1017,41 @@ func findMin(nums []int) int {
 	}
 	return binarySearch(0, len(nums)-1)
 }
+
+// 162. 寻找峰值
+func FindPeakElement(nums []int) int {
+	var results []int
+	var binarySearch func(l, r int)
+	binarySearch = func(l, r int) {
+		if l > r {
+			return
+		}
+		mid := (l + r) / 2
+		left, right := false, false
+		if mid-1 >= 0 {
+			if nums[mid] > nums[mid-1] {
+				left = true
+			}
+		} else {
+			left = true
+		}
+		if mid+1 < len(nums) {
+			if nums[mid] > nums[mid+1] {
+				right = true
+			}
+		} else {
+			right = true
+		}
+		if left && right {
+			results = append(results, mid)
+		}
+		binarySearch(l, mid-1)
+		binarySearch(mid+1, r)
+	}
+
+	binarySearch(0, len(nums)-1)
+	if len(results) > 0 {
+		return results[0]
+	}
+	return -1
+}
