@@ -895,38 +895,26 @@ func pairSum(head *ListNode) int {
 
 // 2181. 合并零之间的节点
 func mergeNodes(head *ListNode) *ListNode {
-	if head == nil {
-		return nil
-	}
-	dummyNode := &ListNode{
-		Val:  1,
-		Next: head,
-	}
-	pre := dummyNode
-	once, sum, p := 0, 0, head
-	for p != nil {
-		if p.Val == 0 {
-			once++
+	for pre, p := head, head; p != nil; pre, p = p, p.Next {
+		if p.Val != 0 {
+			continue
 		}
-		switch once {
-		case 0:
-			pre = p
-			p = p.Next
-		case 1:
-			sum += p.Val
-			p = p.Next
-		case 2:
-			if p.Next == nil {
-				p = nil
+
+		sum := 0
+		q := p.Next
+		for ; q != nil; q = q.Next {
+			sum += q.Val
+			if q.Val == 0 {
+				break
 			}
-			node := &ListNode{
-				Val:  sum,
-				Next: p,
-			}
-			pre.Next = node
-			pre = node
-			once, sum = 0, 0
+		}
+		if q != nil {
+			p.Val = sum
+			p.Next = q
+		} else {
+			pre.Next = nil
+			break
 		}
 	}
-	return dummyNode.Next
+	return head
 }
