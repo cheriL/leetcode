@@ -869,3 +869,26 @@ func deleteMiddle(head *ListNode) *ListNode {
 
 	return head
 }
+
+// 2130. 链表最大孪生和
+func pairSum(head *ListNode) int {
+	var head2 *ListNode
+	length := 0
+	for p := head; p != nil; p = p.Next {
+		length++
+		node := &ListNode{
+			Val:  p.Val,
+			Next: head2,
+		}
+		head2 = node
+	}
+
+	max := 0
+	for p, q, i := head, head2, 0; i <= length/2; p, q, i = p.Next, q.Next, i+1 {
+		if sum := p.Val + q.Val; sum > max {
+			max = sum
+		}
+	}
+
+	return max
+}
