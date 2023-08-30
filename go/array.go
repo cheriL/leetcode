@@ -1019,7 +1019,7 @@ func findMin(nums []int) int {
 }
 
 // 162. 寻找峰值
-func FindPeakElement(nums []int) int {
+func findPeakElement(nums []int) int {
 	var results []int
 	var binarySearch func(l, r int)
 	binarySearch = func(l, r int) {
