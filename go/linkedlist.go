@@ -787,3 +787,28 @@ func isSubPath(head *ListNode, root *TreeNode) bool {
 
 	return validateTree(root, head)
 }
+
+// 1669. 合并两个链表 1 <= a <= b < list1.length - 1
+func mergeInBetween(list1 *ListNode, a int, b int, list2 *ListNode) *ListNode {
+	if list1 == nil || list2 == nil {
+		return list1
+	}
+	tail2 := list2
+	for ; tail2.Next != nil; tail2 = tail2.Next {
+	}
+
+	p, q, i := list1, list1.Next, 1
+	for q != nil {
+		if i == a {
+			p.Next = list2
+		}
+		if i == b {
+			tail2.Next = q.Next
+			break
+		}
+		p = q
+		q = q.Next
+		i++
+	}
+	return list1
+}
