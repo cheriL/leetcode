@@ -892,3 +892,41 @@ func pairSum(head *ListNode) int {
 
 	return max
 }
+
+// 2181. 合并零之间的节点
+func mergeNodes(head *ListNode) *ListNode {
+	if head == nil {
+		return nil
+	}
+	dummyNode := &ListNode{
+		Val:  1,
+		Next: head,
+	}
+	pre := dummyNode
+	once, sum, p := 0, 0, head
+	for p != nil {
+		if p.Val == 0 {
+			once++
+		}
+		switch once {
+		case 0:
+			pre = p
+			p = p.Next
+		case 1:
+			sum += p.Val
+			p = p.Next
+		case 2:
+			if p.Next == nil {
+				p = nil
+			}
+			node := &ListNode{
+				Val:  sum,
+				Next: p,
+			}
+			pre.Next = node
+			pre = node
+			once, sum = 0, 0
+		}
+	}
+	return dummyNode.Next
+}
