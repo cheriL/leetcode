@@ -951,3 +951,50 @@ func nodesBetweenCriticalPoints(head *ListNode) []int {
 	}
 	return []int{minVal, maxVal}
 }
+
+// 2074. 反转偶数长度组的节点
+func ReverseEvenLengthGroups(head *ListNode) *ListNode {
+	if head == nil || head.Next == nil {
+		return head
+	}
+	pre, idx := head, head.Next
+	//i表示第i组
+	i := 2
+	for idx != nil {
+		//计算长度
+		length := 0
+		for p, j := idx, math.Abs(float64(i)); p != nil && float64(length) < j; p, length = p.Next, length+1 {
+		}
+
+		if i > 0 {
+			if length%2 == 0 {
+				p, q, j := idx, idx.Next, 1
+				p.Next = nil
+				for ; j < i && p != nil && q != nil; j++ {
+					temp := q.Next
+					q.Next = p
+					p = q
+					q = temp
+				}
+				pre.Next.Next = q
+				temp := pre.Next
+				pre.Next = p
+				pre, idx = temp, q
+				i++
+			}
+		} else {
+			if length%2 != 0 {
+				j := -1
+				p, q := pre, idx
+				for q != nil && j >= i {
+					p, q = p.Next, q.Next
+					j--
+				}
+				pre, idx = p, q
+				i--
+			}
+		}
+		i = -1 * i
+	}
+	return head
+}
