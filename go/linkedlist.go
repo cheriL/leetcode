@@ -2,6 +2,7 @@
 package _go
 
 import (
+	"math"
 	"math/rand"
 )
 
@@ -917,4 +918,36 @@ func mergeNodes(head *ListNode) *ListNode {
 		}
 	}
 	return head
+}
+
+// 2058. 找出临界点之间的最小和最大距离
+func nodesBetweenCriticalPoints(head *ListNode) []int {
+	if head == nil || head.Next == nil {
+		return []int{-1, -1}
+	}
+	pre, p, first := head, head.Next, -1
+	minVal, maxVal := math.MaxInt32, -1
+	for i, last := 1, -1; p.Next != nil; pre, p = pre.Next, p.Next {
+		if pre.Val < p.Val && p.Next.Val < p.Val || pre.Val > p.Val && p.Next.Val > p.Val {
+			if first == -1 {
+				first = i
+			} else {
+				maxVal = i - first
+			}
+			if last != -1 {
+				if minVal > i-last {
+					minVal = i - last
+					last = i
+				}
+			}
+			last = i
+		}
+
+		i++
+	}
+
+	if first == -1 || maxVal == -1 {
+		minVal = -1
+	}
+	return []int{minVal, maxVal}
 }
