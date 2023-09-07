@@ -1055,3 +1055,20 @@ func findPeakElement(nums []int) int {
 	}
 	return -1
 }
+
+// 167. 两数之和 II - 输入有序数组
+func twoSum(numbers []int, target int) []int {
+	results := make([]int, 2)
+	for i, j := 0, len(numbers)-1; i < j; {
+		sum := numbers[i] + numbers[j]
+		if sum == target {
+			results[0], results[1] = i+1, j+1
+			break
+		} else if sum < target {
+			i++
+		} else {
+			j--
+		}
+	}
+	return results
+}
