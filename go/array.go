@@ -1072,3 +1072,21 @@ func twoSum(numbers []int, target int) []int {
 	}
 	return results
 }
+
+// 169. 多数元素
+func majorityElement(nums []int) int {
+	num, count := 0, 0
+	for _, v := range nums {
+		if count == 0 {
+			num = v
+			count++
+		} else {
+			if num == v {
+				count++
+			} else {
+				count--
+			}
+		}
+	}
+	return num
+}
