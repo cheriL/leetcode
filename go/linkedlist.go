@@ -998,3 +998,20 @@ func reverseEvenLengthGroups(head *ListNode) *ListNode {
 	}
 	return head
 }
+
+// 2487. 从链表中移除节点
+func removeNodes(head *ListNode) *ListNode {
+	var removeFn func(node *ListNode) *ListNode
+	removeFn = func(node *ListNode) *ListNode {
+		if node == nil || node.Next == nil {
+			return node
+		}
+
+		node.Next = removeFn(node.Next)
+		if node.Next.Val > node.Val {
+			return node.Next
+		}
+		return node
+	}
+	return removeFn(head)
+}
