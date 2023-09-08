@@ -5,6 +5,7 @@ package _go
 import (
 	"math"
 	"sort"
+	"strconv"
 )
 
 // 4. 寻找两个正序数组的中位数
@@ -1089,4 +1090,76 @@ func majorityElement(nums []int) int {
 		}
 	}
 	return num
+}
+
+// 179. 最大数
+func largestNumber(nums []int) string {
+	if len(nums) == 0 {
+		return string("0")
+	}
+	var result string
+	strList := make([]string, len(nums))
+	for i := 0; i < len(nums); i++ {
+		strList[i] = strconv.Itoa(nums[i])
+	}
+	temp := make([]string, len(nums))
+
+	var lessFunc func(l, r string) bool
+	var mergeSort func(nums []string, l, r int, temp []string)
+	var mergeFunc func(nums []string, l, mid, r int, temp []string)
+	lessFunc = func(l, r string) bool {
+		sum1, sum2 := l+r, r+l
+		if sum1 > sum2 {
+			return false
+		}
+		return true
+	}
+	mergeSort = func(nums []string, l, r int, temp []string) {
+		if l < r {
+			mid := (l + r) / 2
+			mergeSort(nums, l, mid, temp)
+			mergeSort(nums, mid+1, r, temp)
+			mergeFunc(nums, l, mid, r, temp)
+		}
+	}
+	mergeFunc = func(nums []string, l, mid, r int, temp []string) {
+		i, j, s := l, mid+1, l
+		for i <= mid && j <= r {
+			if lessFunc(nums[i], nums[j]) {
+				temp[s] = nums[j]
+				j++
+			} else {
+				temp[s] = nums[i]
+				i++
+			}
+			s++
+		}
+		if i <= mid {
+			for ; i <= mid; i++ {
+				temp[s] = nums[i]
+				s++
+			}
+		}
+		if j <= r {
+			for ; j <= r; j++ {
+				temp[s] = nums[j]
+				s++
+			}
+		}
+		for i := l; i <= r; i++ {
+			nums[i] = temp[i]
+		}
+	}
+
+	mergeSort(strList, 0, len(nums)-1, temp)
+	for _, v := range strList {
+		if v == "0" && result == "" {
+			continue
+		}
+		result += v
+	}
+	if result == "" {
+		result += "0"
+	}
+	return result
 }
