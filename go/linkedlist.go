@@ -1015,3 +1015,37 @@ func removeNodes(head *ListNode) *ListNode {
 	}
 	return removeFn(head)
 }
+
+// 2807. 在链表中插入最大公约数
+func insertGreatestCommonDivisors(head *ListNode) *ListNode {
+	if head == nil || head.Next == nil {
+		return head
+	}
+	greatestFn := func(a, b int) int {
+		if a == b {
+			return a
+		}
+
+		temp, min := a-b, b
+		if a < b {
+			temp, min = b-a, a
+		}
+		for temp != min {
+			if temp > min {
+				temp = temp - min
+			} else {
+				temp, min = min-temp, temp
+			}
+		}
+		return temp
+	}
+
+	p, q := head, head.Next
+	for q != nil {
+		val := greatestFn(p.Val, q.Val)
+		p.Next = &ListNode{Val: val, Next: q}
+		p = q
+		q = q.Next
+	}
+	return head
+}
