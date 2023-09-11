@@ -1049,3 +1049,37 @@ func insertGreatestCommonDivisors(head *ListNode) *ListNode {
 	}
 	return head
 }
+
+// 2816. 翻倍以链表形式表示的数字
+func doubleIt(head *ListNode) *ListNode {
+	if head == nil {
+		return nil
+	}
+
+	doReverse := func(head *ListNode) *ListNode {
+		p, q := head, head.Next
+		p.Next = nil
+		for q != nil {
+			temp := q.Next
+			q.Next = p
+			p = q
+			q = temp
+		}
+		return p
+	}
+	newNead := doReverse(head)
+	val, flag := 0, 0
+	for p := newNead; p != nil; p = p.Next {
+		val, flag = (p.Val*2+flag)%10, (p.Val*2+flag)/10
+		p.Val = val
+	}
+	head = doReverse(newNead)
+	if flag > 0 {
+		node := &ListNode{
+			Val:  flag,
+			Next: head,
+		}
+		head = node
+	}
+	return head
+}
