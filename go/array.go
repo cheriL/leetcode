@@ -1163,3 +1163,18 @@ func largestNumber(nums []int) string {
 	}
 	return result
 }
+
+// 189. 轮转数组
+func rotate1(nums []int, k int) {
+	reverse := func(start, end int) {
+		for start < end {
+			nums[start], nums[end] = nums[end], nums[start]
+			start++
+			end--
+		}
+	}
+
+	reverse(0, len(nums)-1)
+	reverse(0, k%len(nums)-1)
+	reverse(k%len(nums), len(nums)-1)
+}

@@ -1015,3 +1015,71 @@ func removeNodes(head *ListNode) *ListNode {
 	}
 	return removeFn(head)
 }
+
+// 2807. 在链表中插入最大公约数
+func insertGreatestCommonDivisors(head *ListNode) *ListNode {
+	if head == nil || head.Next == nil {
+		return head
+	}
+	greatestFn := func(a, b int) int {
+		if a == b {
+			return a
+		}
+
+		temp, min := a-b, b
+		if a < b {
+			temp, min = b-a, a
+		}
+		for temp != min {
+			if temp > min {
+				temp = temp - min
+			} else {
+				temp, min = min-temp, temp
+			}
+		}
+		return temp
+	}
+
+	p, q := head, head.Next
+	for q != nil {
+		val := greatestFn(p.Val, q.Val)
+		p.Next = &ListNode{Val: val, Next: q}
+		p = q
+		q = q.Next
+	}
+	return head
+}
+
+// 2816. 翻倍以链表形式表示的数字
+func doubleIt(head *ListNode) *ListNode {
+	if head == nil {
+		return nil
+	}
+
+	doReverse := func(head *ListNode) *ListNode {
+		p, q := head, head.Next
+		p.Next = nil
+		for q != nil {
+			temp := q.Next
+			q.Next = p
+			p = q
+			q = temp
+		}
+		return p
+	}
+	newNead := doReverse(head)
+	val, flag := 0, 0
+	for p := newNead; p != nil; p = p.Next {
+		val, flag = (p.Val*2+flag)%10, (p.Val*2+flag)/10
+		p.Val = val
+	}
+	head = doReverse(newNead)
+	if flag > 0 {
+		node := &ListNode{
+			Val:  flag,
+			Next: head,
+		}
+		head = node
+	}
+	return head
+}
