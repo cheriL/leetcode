@@ -264,3 +264,39 @@ func levelOrderBottom(root *TreeNode) [][]int {
 	}
 	return results
 }
+
+// 1110. 删点成林
+func delNodes(root *TreeNode, to_delete []int) []*TreeNode {
+	var results []*TreeNode
+	targetSet := map[int]struct{}{}
+	for _, v := range to_delete {
+		targetSet[v] = struct{}{}
+	}
+
+	var traversal func(*TreeNode, *TreeNode)
+	traversal = func(node *TreeNode, parent *TreeNode) {
+		if node == nil {
+			return
+		}
+		if _, ok := targetSet[node.Val]; ok {
+			if parent != nil {
+				if parent.Left == node {
+					parent.Left = nil
+				} else {
+					parent.Right = nil
+				}
+			}
+			traversal(node.Left, nil)
+			traversal(node.Right, nil)
+			node = nil
+		} else {
+			if parent == nil {
+				results = append(results, node)
+			}
+			traversal(node.Left, node)
+			traversal(node.Right, node)
+		}
+	}
+	traversal(root, nil)
+	return results
+}
