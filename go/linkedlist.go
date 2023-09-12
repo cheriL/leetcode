@@ -1083,3 +1083,20 @@ func doubleIt(head *ListNode) *ListNode {
 	}
 	return head
 }
+
+// LCR 021. 删除链表的倒数第 N 个结点
+func removeNthFromEnd(head *ListNode, n int) *ListNode {
+	dummyNode := &ListNode{Next: head}
+	p, q, i := dummyNode, dummyNode, 0
+	for p.Next != nil {
+		if i >= n {
+			q = q.Next
+		}
+		p = p.Next
+		i++
+	}
+	if i >= n {
+		q.Next = q.Next.Next
+	}
+	return dummyNode.Next
+}

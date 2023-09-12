@@ -405,33 +405,6 @@ func letterCombinations(digits string) []string {
 	return comb(0, len(digits)-1)
 }
 
-/**
- * Definition for singly-linked list.
- * 进阶：你能尝试使用一趟扫描实现吗？
- */
-func removeNthFromEnd(head *ListNode, n int) *ListNode {
-	first := head
-	sec := head
-	i := 0
-	for first.Next != nil {
-		if i >= n {
-			sec = sec.Next
-		}
-		first = first.Next
-		i++
-	}
-
-	if i >= n {
-		temp := sec.Next
-		sec.Next = temp.Next
-		temp.Next = nil
-	} else {
-		head = sec.Next
-	}
-
-	return head
-}
-
 // 有效括号
 func isValid(s string) bool {
 	var stack []int32
