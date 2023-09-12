@@ -1,3 +1,5 @@
+//https://leetcode.cn/tag/binary-tree/problemset/
+
 package _go
 
 import "math"
@@ -144,4 +146,22 @@ func isSameTree(p *TreeNode, q *TreeNode) bool {
 	}
 
 	return validate(p, q)
+}
+
+// 101. 对称二叉树
+func isSymmetric(root *TreeNode) bool {
+	var validate func(*TreeNode, *TreeNode) bool
+	validate = func(node *TreeNode, node2 *TreeNode) bool {
+		if node == nil && node2 == nil {
+			return true
+		} else if node != nil && node2 != nil {
+			return node.Val == node2.Val &&
+				validate(node.Left, node2.Right) &&
+				validate(node.Right, node2.Left)
+		} else {
+			return false
+		}
+	}
+
+	return validate(root.Left, root.Right)
 }
