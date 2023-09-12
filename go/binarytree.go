@@ -221,3 +221,20 @@ func zigzagLevelOrder(root *TreeNode) [][]int {
 	}
 	return results
 }
+
+// 104. 二叉树的最大深度
+func maxDepth(root *TreeNode) int {
+	var traversal func(*TreeNode) int
+	traversal = func(node *TreeNode) int {
+		if node == nil {
+			return 0
+		}
+		lDepth := traversal(node.Left)
+		rDepth := traversal(node.Right)
+		if lDepth > rDepth {
+			return lDepth + 1
+		}
+		return rDepth + 1
+	}
+	return traversal(root)
+}
