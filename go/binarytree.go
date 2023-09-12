@@ -191,3 +191,33 @@ func levelOrder(root *TreeNode) [][]int {
 	}
 	return results
 }
+
+// 103. 二叉树的锯齿形层序遍历
+func zigzagLevelOrder(root *TreeNode) [][]int {
+	var results [][]int
+	if root == nil {
+		return results
+	}
+
+	queue := []*TreeNode{root}
+	for rev := false; len(queue) > 0; rev = !rev {
+		length := len(queue)
+		result := make([]int, length)
+		for i := 0; i < length; i++ {
+			if rev {
+				result[i] = queue[length-1-i].Val
+			} else {
+				result[i] = queue[i].Val
+			}
+			if queue[i].Left != nil {
+				queue = append(queue, queue[i].Left)
+			}
+			if queue[i].Right != nil {
+				queue = append(queue, queue[i].Right)
+			}
+		}
+		results = append(results, result)
+		queue = queue[length:]
+	}
+	return results
+}
