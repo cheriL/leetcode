@@ -165,3 +165,29 @@ func isSymmetric(root *TreeNode) bool {
 
 	return validate(root.Left, root.Right)
 }
+
+// 102. 二叉树的层序遍历
+func levelOrder(root *TreeNode) [][]int {
+	var results [][]int
+	if root == nil {
+		return results
+	}
+
+	queue := []*TreeNode{root}
+	for len(queue) > 0 {
+		length := len(queue)
+		result := make([]int, length)
+		for i := 0; i < length; i++ {
+			result[i] = queue[i].Val
+			if queue[i].Left != nil {
+				queue = append(queue, queue[i].Left)
+			}
+			if queue[i].Right != nil {
+				queue = append(queue, queue[i].Right)
+			}
+		}
+		results = append(results, result)
+		queue = queue[length:]
+	}
+	return results
+}
