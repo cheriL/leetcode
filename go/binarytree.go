@@ -322,3 +322,60 @@ func isBalanced(root *TreeNode) bool {
 	ok, _ := traversal(root)
 	return ok
 }
+
+// 112. 路径总和
+func hasPathSum(root *TreeNode, targetSum int) bool {
+	if root == nil {
+		return false
+	}
+	var traversal func(*TreeNode, int) bool
+	traversal = func(node *TreeNode, val int) bool {
+		if node == nil {
+			return false
+		}
+		sum := node.Val + val
+		if node.Left == nil && node.Right == nil {
+			if sum == targetSum {
+				return true
+			}
+		}
+
+		return traversal(node.Left, sum) || traversal(node.Right, sum)
+	}
+	return traversal(root, 0)
+}
+
+// 113. 路径总和 II
+func pathSum(root *TreeNode, targetSum int) [][]int {
+	if root == nil {
+		return nil
+	}
+
+	var results [][]int
+	var result []int
+
+	var traversal func(*TreeNode, int, []int)
+	traversal = func(node *TreeNode, val int, result []int) {
+		if node == nil {
+			return
+		}
+
+		path := make([]int, len(result)+1)
+		copy(path, result)
+		path[len(result)] = node.Val
+
+		sum := node.Val + val
+		if node.Left == nil && node.Right == nil {
+			if sum == targetSum {
+				results = append(results, path)
+				return
+			}
+		}
+
+		traversal(node.Left, sum, path)
+		traversal(node.Right, sum, path)
+	}
+	traversal(root, 0, result)
+
+	return results
+}
