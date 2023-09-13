@@ -1178,3 +1178,18 @@ func rotate1(nums []int, k int) {
 	reverse(0, k%len(nums)-1)
 	reverse(k%len(nums), len(nums)-1)
 }
+
+// 55. 跳跃游戏
+func canJump(nums []int) bool {
+	dp := make([]bool, len(nums))
+	dp[0] = true
+	for i := 1; i < len(nums); i++ {
+		for j := 0; j < i; j++ {
+			if nums[j] >= i-j && dp[j] {
+				dp[i] = true
+				break
+			}
+		}
+	}
+	return dp[len(nums)-1]
+}
