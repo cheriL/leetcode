@@ -419,3 +419,27 @@ func maxPathSum(root *TreeNode) int {
 	findMax(root)
 	return max
 }
+
+// 129. 求根节点到叶节点数字之和
+func sumNumbers(root *TreeNode) int {
+	result := 0
+	var sumFn func(*TreeNode, int)
+	sumFn = func(node *TreeNode, pVal int) {
+		if node == nil {
+			return
+		}
+		val := pVal*10 + node.Val
+		if node.Left == nil && node.Right == nil {
+			result += val
+			return
+		}
+		if node.Left != nil {
+			sumFn(node.Left, val)
+		}
+		if node.Right != nil {
+			sumFn(node.Right, val)
+		}
+	}
+	sumFn(root, 0)
+	return result
+}
