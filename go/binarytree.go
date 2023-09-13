@@ -300,3 +300,25 @@ func delNodes(root *TreeNode, to_delete []int) []*TreeNode {
 	traversal(root, nil)
 	return results
 }
+
+// 110. 平衡二叉树
+func isBalanced(root *TreeNode) bool {
+	var traversal func(*TreeNode) (bool, int)
+	traversal = func(node *TreeNode) (bool, int) {
+		if node == nil {
+			return true, 0
+		}
+		ok, l := traversal(node.Left)
+		ok2, r := traversal(node.Right)
+		if l > r {
+			return ok && ok2 && l == r+1, l + 1
+		} else if l == r {
+			return ok && ok2, l + 1
+		} else {
+			return ok && ok2 && r == l+1, r + 1
+		}
+	}
+
+	ok, _ := traversal(root)
+	return ok
+}
