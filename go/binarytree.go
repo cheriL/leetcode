@@ -2,7 +2,9 @@
 
 package _go
 
-import "math"
+import (
+	"math"
+)
 
 /*
 *94 中序遍历
@@ -378,4 +380,42 @@ func pathSum(root *TreeNode, targetSum int) [][]int {
 	traversal(root, 0, result)
 
 	return results
+}
+
+// 124. 二叉树中的最大路径和
+func maxPathSum(root *TreeNode) int {
+	if root == nil {
+		return 0
+	}
+	max := root.Val
+	var findMax func(*TreeNode) int
+	findMax = func(node *TreeNode) int {
+		if node == nil {
+			return 0
+		}
+		//该节点下的最大，可能是 node + left + right
+		sum := node.Val
+		leftVal := findMax(node.Left)
+		rightVal := findMax(node.Right)
+		if sum+leftVal > sum {
+			sum += leftVal
+		}
+		if sum+rightVal > sum {
+			sum += rightVal
+		}
+		if sum > max {
+			max = sum
+		}
+		// 只返回 node + left 或 node + right 或 node
+		maxOfChild := leftVal
+		if leftVal < rightVal {
+			maxOfChild = rightVal
+		}
+		if node.Val+maxOfChild > node.Val {
+			return node.Val + maxOfChild
+		}
+		return node.Val
+	}
+	findMax(root)
+	return max
 }
