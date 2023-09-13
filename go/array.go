@@ -1213,3 +1213,54 @@ func uniquePaths(m int, n int) int {
 	}
 	return dp[m-1][n-1]
 }
+
+// 63. 不同路径 II
+func uniquePathsWithObstacles(obstacleGrid [][]int) int {
+	m, n := len(obstacleGrid), len(obstacleGrid[0])
+	if obstacleGrid[0][0] == 0 {
+		obstacleGrid[0][0] = -1
+	}
+	for i := 0; i < m; i++ {
+		for j := 0; j < n; j++ {
+			if obstacleGrid[i][j] > 0 {
+				continue
+			}
+			if i >= 1 && obstacleGrid[i-1][j] < 0 {
+				obstacleGrid[i][j] += obstacleGrid[i-1][j]
+			}
+			if j >= 1 && obstacleGrid[i][j-1] < 0 {
+				obstacleGrid[i][j] += obstacleGrid[i][j-1]
+			}
+		}
+	}
+	if obstacleGrid[m-1][n-1] > 0 {
+		return 0
+	}
+
+	return -obstacleGrid[m-1][n-1]
+}
+
+// 64. 最小路径和
+func minPathSum(grid [][]int) int {
+	m, n := len(grid), len(grid[0])
+	for i := 0; i < m; i++ {
+		for j := 0; j < n; j++ {
+			val := grid[i][j]
+			if i >= 1 && j >= 1 {
+				if grid[i-1][j] > grid[i][j-1] {
+					val += grid[i][j-1]
+				} else {
+					val += grid[i-1][j]
+				}
+			} else {
+				if i >= 1 {
+					val += grid[i-1][j]
+				} else if j >= 1 {
+					val += grid[i][j-1]
+				}
+			}
+			grid[i][j] = val
+		}
+	}
+	return grid[m-1][n-1]
+}
