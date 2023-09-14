@@ -443,3 +443,31 @@ func sumNumbers(root *TreeNode) int {
 	sumFn(root, 0)
 	return result
 }
+
+// 199. 二叉树的右视图
+func rightSideView(root *TreeNode) []int {
+	var results []int
+	var nodeList []*TreeNode
+	nodeList = append(nodeList, root)
+
+	for len(nodeList) > 0 {
+		length := len(nodeList)
+		for i := 0; i < length; i++ {
+			if nodeList[i] == nil {
+				continue
+			}
+			if i == length-1 {
+				results = append(results, nodeList[i].Val)
+			}
+			if nodeList[i].Left != nil {
+				nodeList = append(nodeList, nodeList[i].Left)
+			}
+			if nodeList[i].Right != nil {
+				nodeList = append(nodeList, nodeList[i].Right)
+			}
+		}
+		nodeList = nodeList[length:]
+	}
+
+	return results
+}
