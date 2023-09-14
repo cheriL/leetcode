@@ -1,4 +1,5 @@
 //https://leetcode.cn/tag/array/problemset/
+//https://leetcode.cn/tag/dynamic-programming/problemset/
 
 package _go
 
@@ -1263,4 +1264,36 @@ func minPathSum(grid [][]int) int {
 		}
 	}
 	return grid[m-1][n-1]
+}
+
+// 97. 交错字符串
+func isInterleave(s1 string, s2 string, s3 string) bool {
+	m, n := len(s1), len(s2)
+	if len(s3) != m+n {
+		return false
+	}
+	dp := make([][]byte, m+1)
+	for i := 0; i < m+1; i++ {
+		dp[i] = make([]byte, n+1)
+	}
+	dp[0][0] = 1
+	for i := 0; i < m+1; i++ {
+		for j := 0; j < n+1; j++ {
+			idx := i + j - 1
+			if i > 0 {
+				if dp[i-1][j] == 1 && s1[i-1] == s3[idx] {
+					dp[i][j] = 1
+				}
+			}
+			if j > 0 {
+				if dp[i][j-1] == 1 && s2[j-1] == s3[idx] {
+					dp[i][j] = 1
+				}
+			}
+		}
+	}
+	if dp[m][n] == 1 {
+		return true
+	}
+	return false
 }
