@@ -1385,3 +1385,33 @@ func combinationSum3(k int, n int) [][]int {
 	backTrace(1, 0, path, &results)
 	return results
 }
+
+// 217. 存在重复元素
+func containsDuplicate(nums []int) bool {
+	sort.Ints(nums)
+	for i := 1; i < len(nums); i++ {
+		if nums[i] == nums[i-1] {
+			return true
+		}
+	}
+	return false
+}
+
+// 219. 存在重复元素 II
+func containsNearbyDuplicate(nums []int, k int) bool {
+	for start, end := 0, 1; start < end && start < len(nums); {
+		if k < end-start || end >= len(nums) {
+			start++
+			end = start + 1
+		} else {
+			if nums[start] == nums[end] {
+				return true
+			}
+			if end < len(nums) {
+				end++
+			}
+		}
+	}
+
+	return false
+}
