@@ -1297,3 +1297,28 @@ func isInterleave(s1 string, s2 string, s3 string) bool {
 	}
 	return false
 }
+
+// 209. 长度最小的子数组
+func minSubArrayLen(target int, nums []int) int {
+	res := math.MaxInt32
+	start, end := 0, 0
+	sum := 0
+	for end < len(nums) && end >= start {
+		sum += nums[end]
+		if sum >= target {
+			if res > end-start+1 {
+				res = end - start + 1
+			}
+			sum -= nums[end]
+			sum -= nums[start]
+			start++
+		} else if sum < target {
+			end++
+		}
+	}
+	if res == math.MaxInt32 {
+		res = 0
+	}
+
+	return res
+}
