@@ -1358,3 +1358,30 @@ func findKthLargest(nums []int, k int) int {
 	}
 	return result
 }
+
+// 216. 组合总和 III
+func combinationSum3(k int, n int) [][]int {
+	var results [][]int
+	var path []int
+
+	var backTrace func(int, int, []int, *[][]int)
+	backTrace = func(idx int, sum int, path []int, results *[][]int) {
+		length := len(path)
+		if sum == n && length == k {
+			result := make([]int, len(path))
+			copy(result, path)
+			*results = append(*results, result)
+		}
+
+		for i := idx; i < 10; i++ {
+			sum += i
+			path = append(path, i)
+			backTrace(i+1, sum, path, results)
+			sum -= i
+			path = path[:len(path)-1]
+		}
+	}
+
+	backTrace(1, 0, path, &results)
+	return results
+}
