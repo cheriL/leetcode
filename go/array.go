@@ -1322,3 +1322,39 @@ func minSubArrayLen(target int, nums []int) int {
 
 	return res
 }
+
+// 215. 数组中的第K个最大元素
+func findKthLargest(nums []int, k int) int {
+	var buildMaxHeap func([]int, int)
+	var maxHeapify func([]int, int, int)
+	buildMaxHeap = func(nums []int, size int) {
+		for i := size / 2; i >= 0; i-- {
+			maxHeapify(nums, size, i)
+		}
+	}
+	maxHeapify = func(nums []int, size int, idx int) {
+		l, r := idx*2+1, idx*2+2
+		maxIdx := idx
+		if l < size && nums[l] > nums[maxIdx] {
+			maxIdx = l
+		}
+		if r < size && nums[r] > nums[maxIdx] {
+			maxIdx = r
+		}
+		if maxIdx != idx {
+			nums[maxIdx], nums[idx] = nums[idx], nums[maxIdx]
+			maxHeapify(nums, size, maxIdx)
+		}
+	}
+
+	length := len(nums)
+	result := 0
+	buildMaxHeap(nums, length)
+	for i := 0; i < k; i++ {
+		result = nums[0]
+		nums[0] = nums[length-1]
+		length--
+		maxHeapify(nums, length, 0)
+	}
+	return result
+}
