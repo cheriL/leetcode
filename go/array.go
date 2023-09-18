@@ -1462,3 +1462,25 @@ func maximalSquare(matrix [][]byte) int {
 	}
 	return max
 }
+
+// 264. 丑数 II
+// [1, 2, 3, 4, 5, 6, 8, 9, 10, 12] 是由前 10 个丑数组成的序列。
+func nthUglyNumber(n int) int {
+	dp := make([]int, n+1)
+	dp[1] = 1
+	p2, p3, p5 := 1, 1, 1
+	for i := 2; i <= n; i++ {
+		res2, res3, res5 := dp[p2]*2, dp[p3]*3, dp[p5]*5
+		dp[i] = int(math.Min(math.Min(float64(res2), float64(res3)), float64(res5)))
+		if dp[i] == dp[p2]*2 {
+			p2++
+		}
+		if dp[i] == dp[p3]*3 {
+			p3++
+		}
+		if dp[i] == dp[p5]*5 {
+			p5++
+		}
+	}
+	return dp[n]
+}
