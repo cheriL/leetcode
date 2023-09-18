@@ -471,3 +471,33 @@ func rightSideView(root *TreeNode) []int {
 
 	return results
 }
+
+// 222. 完全二叉树的节点个数
+func countNodes(root *TreeNode) int {
+	var traversal func(*TreeNode)
+	sum := 0
+	traversal = func(node *TreeNode) {
+		if node == nil {
+			return
+		}
+		sum++
+		traversal(node.Left)
+		traversal(node.Right)
+	}
+	return sum
+}
+
+// 226. 翻转二叉树
+func invertTree(root *TreeNode) *TreeNode {
+	var invert func(*TreeNode)
+	invert = func(node *TreeNode) {
+		if node == nil {
+			return
+		}
+		node.Left, node.Right = node.Right, node.Left
+		invert(node.Left)
+		invert(node.Right)
+	}
+	invert(root)
+	return root
+}
