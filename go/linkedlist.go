@@ -1121,3 +1121,21 @@ func detectCycle1(head *ListNode) *ListNode {
 	}
 	return p
 }
+
+// LCR 023. 相交链表
+func getIntersectionNode1(headA, headB *ListNode) *ListNode {
+	p, q := headA, headB
+	for p != q {
+		if p == nil {
+			p = headB
+		} else {
+			p = p.Next
+		}
+		if q == nil {
+			q = headA
+		} else {
+			q = q.Next
+		}
+	}
+	return p
+}
