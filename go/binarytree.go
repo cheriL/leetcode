@@ -545,3 +545,58 @@ func kthSmallest(root *TreeNode, k int) int {
 	traversal(root)
 	return valList[k-1]
 }
+
+// 1361. 验证二叉树
+func validateBinaryTreeNodes(n int, leftChild []int, rightChild []int) bool {
+	root := -1
+	treeSet := map[int]struct{}{}
+	for i := 0; i < n; i++ {
+		if leftChild[i] >= 0 {
+			if _, ok := treeSet[leftChild[i]]; ok {
+				return false
+			}
+			treeSet[leftChild[i]] = struct{}{}
+		}
+		if rightChild[i] >= 0 {
+			if _, ok := treeSet[rightChild[i]]; ok {
+				return false
+			}
+			treeSet[rightChild[i]] = struct{}{}
+		}
+	}
+	for i := 0; i < n; i++ {
+		if _, ok := treeSet[i]; !ok {
+			root = i
+			break
+		}
+	}
+	if root < 0 {
+		return false
+	}
+	treeSet = map[int]struct{}{
+		root: {},
+	}
+
+	var build func(int) bool
+	build = func(idx int) bool {
+		leftIdx, rightIdx := leftChild[idx], rightChild[idx]
+		left, right := true, true
+		if leftIdx != -1 {
+			if _, ok := treeSet[leftIdx]; ok {
+				return false
+			}
+			treeSet[leftIdx] = struct{}{}
+			left = build(leftIdx)
+		}
+		if rightIdx != -1 {
+			if _, ok := treeSet[rightIdx]; ok {
+				return false
+			}
+			treeSet[rightIdx] = struct{}{}
+			right = build(rightIdx)
+		}
+		return left && right
+	}
+
+	return build(root) && len(treeSet) == n
+}
