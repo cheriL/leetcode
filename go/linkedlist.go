@@ -1100,3 +1100,60 @@ func removeNthFromEnd(head *ListNode, n int) *ListNode {
 	}
 	return dummyNode.Next
 }
+
+// LCR 022. 环形链表 II
+func detectCycle1(head *ListNode) *ListNode {
+	p, q := head, head
+	for {
+		if p == nil || p.Next == nil {
+			return nil
+		}
+		p = p.Next.Next
+		q = q.Next
+		if p == q {
+			break
+		}
+	}
+	p = head
+	for p != q {
+		p = p.Next
+		q = q.Next
+	}
+	return p
+}
+
+// LCR 023. 相交链表
+func getIntersectionNode1(headA, headB *ListNode) *ListNode {
+	p, q := headA, headB
+	for p != q {
+		if p == nil {
+			p = headB
+		} else {
+			p = p.Next
+		}
+		if q == nil {
+			q = headA
+		} else {
+			q = q.Next
+		}
+	}
+	return p
+}
+
+// 面试题 02.04. 分割链表
+func partition1(head *ListNode, x int) *ListNode {
+	dummyNode, dummyNode2 := &ListNode{}, &ListNode{}
+	p, q := dummyNode, dummyNode2
+	for i := head; i != nil; i = i.Next {
+		node := &ListNode{Val: i.Val}
+		if node.Val < x {
+			p.Next = node
+			p = node
+		} else {
+			q.Next = node
+			q = node
+		}
+	}
+	p.Next = dummyNode2.Next
+	return dummyNode.Next
+}

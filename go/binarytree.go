@@ -471,3 +471,132 @@ func rightSideView(root *TreeNode) []int {
 
 	return results
 }
+
+// 222. 完全二叉树的节点个数
+func countNodes(root *TreeNode) int {
+	var traversal func(*TreeNode)
+	sum := 0
+	traversal = func(node *TreeNode) {
+		if node == nil {
+			return
+		}
+		sum++
+		traversal(node.Left)
+		traversal(node.Right)
+	}
+	return sum
+}
+
+// 226. 翻转二叉树
+func invertTree(root *TreeNode) *TreeNode {
+	var invert func(*TreeNode)
+	invert = func(node *TreeNode) {
+		if node == nil {
+			return
+		}
+		node.Left, node.Right = node.Right, node.Left
+		invert(node.Left)
+		invert(node.Right)
+	}
+	invert(root)
+	return root
+}
+
+// 1382. 将二叉搜索树变平衡
+func balanceBST(root *TreeNode) *TreeNode {
+	var nodeList []*TreeNode
+	var traversal func(*TreeNode)
+	traversal = func(node *TreeNode) {
+		if node == nil {
+			return
+		}
+		traversal(node.Left)
+		nodeList = append(nodeList, node)
+		traversal(node.Right)
+		node.Left, node.Right = nil, nil
+	}
+	var buildAvgTree func([]*TreeNode, int, int) *TreeNode
+	buildAvgTree = func(nodes []*TreeNode, start int, end int) *TreeNode {
+		if start > end {
+			return nil
+		}
+		mid := (start + end) / 2
+		nodes[mid].Left = buildAvgTree(nodes, start, mid-1)
+		nodes[mid].Right = buildAvgTree(nodes, mid+1, end)
+		return nodes[mid]
+	}
+	traversal(root)
+	root = buildAvgTree(nodeList, 0, len(nodeList)-1)
+	return root
+}
+
+// 230. 二叉搜索树中第K小的元素
+func kthSmallest(root *TreeNode, k int) int {
+	var valList []int
+	var traversal func(*TreeNode)
+	traversal = func(node *TreeNode) {
+		if node == nil {
+			return
+		}
+		traversal(node.Left)
+		valList = append(valList, node.Val)
+		traversal(node.Right)
+	}
+	traversal(root)
+	return valList[k-1]
+}
+
+// 1361. 验证二叉树
+func validateBinaryTreeNodes(n int, leftChild []int, rightChild []int) bool {
+	root := -1
+	treeSet := map[int]struct{}{}
+	for i := 0; i < n; i++ {
+		if leftChild[i] >= 0 {
+			if _, ok := treeSet[leftChild[i]]; ok {
+				return false
+			}
+			treeSet[leftChild[i]] = struct{}{}
+		}
+		if rightChild[i] >= 0 {
+			if _, ok := treeSet[rightChild[i]]; ok {
+				return false
+			}
+			treeSet[rightChild[i]] = struct{}{}
+		}
+	}
+	for i := 0; i < n; i++ {
+		if _, ok := treeSet[i]; !ok {
+			root = i
+			break
+		}
+	}
+	if root < 0 {
+		return false
+	}
+	treeSet = map[int]struct{}{
+		root: {},
+	}
+
+	var build func(int) bool
+	build = func(idx int) bool {
+		leftIdx, rightIdx := leftChild[idx], rightChild[idx]
+		left, right := true, true
+		if leftIdx != -1 {
+			if _, ok := treeSet[leftIdx]; ok {
+				return false
+			}
+			treeSet[leftIdx] = struct{}{}
+			left = build(leftIdx)
+		}
+		if rightIdx != -1 {
+			if _, ok := treeSet[rightIdx]; ok {
+				return false
+			}
+			treeSet[rightIdx] = struct{}{}
+			right = build(rightIdx)
+		}
+		return left && right
+	}
+
+	return build(root) && len(treeSet) == n
+}

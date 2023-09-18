@@ -1297,3 +1297,190 @@ func isInterleave(s1 string, s2 string, s3 string) bool {
 	}
 	return false
 }
+
+// 209. 长度最小的子数组
+func minSubArrayLen(target int, nums []int) int {
+	res := math.MaxInt32
+	start, end := 0, 0
+	sum := 0
+	for end < len(nums) && end >= start {
+		sum += nums[end]
+		if sum >= target {
+			if res > end-start+1 {
+				res = end - start + 1
+			}
+			sum -= nums[end]
+			sum -= nums[start]
+			start++
+		} else if sum < target {
+			end++
+		}
+	}
+	if res == math.MaxInt32 {
+		res = 0
+	}
+
+	return res
+}
+
+// 215. 数组中的第K个最大元素
+func findKthLargest(nums []int, k int) int {
+	var buildMaxHeap func([]int, int)
+	var maxHeapify func([]int, int, int)
+	buildMaxHeap = func(nums []int, size int) {
+		for i := size / 2; i >= 0; i-- {
+			maxHeapify(nums, size, i)
+		}
+	}
+	maxHeapify = func(nums []int, size int, idx int) {
+		l, r := idx*2+1, idx*2+2
+		maxIdx := idx
+		if l < size && nums[l] > nums[maxIdx] {
+			maxIdx = l
+		}
+		if r < size && nums[r] > nums[maxIdx] {
+			maxIdx = r
+		}
+		if maxIdx != idx {
+			nums[maxIdx], nums[idx] = nums[idx], nums[maxIdx]
+			maxHeapify(nums, size, maxIdx)
+		}
+	}
+
+	length := len(nums)
+	result := 0
+	buildMaxHeap(nums, length)
+	for i := 0; i < k; i++ {
+		result = nums[0]
+		nums[0] = nums[length-1]
+		length--
+		maxHeapify(nums, length, 0)
+	}
+	return result
+}
+
+// 216. 组合总和 III
+func combinationSum3(k int, n int) [][]int {
+	var results [][]int
+	var path []int
+
+	var backTrace func(int, int, []int, *[][]int)
+	backTrace = func(idx int, sum int, path []int, results *[][]int) {
+		length := len(path)
+		if sum == n && length == k {
+			result := make([]int, len(path))
+			copy(result, path)
+			*results = append(*results, result)
+		}
+
+		for i := idx; i < 10; i++ {
+			sum += i
+			path = append(path, i)
+			backTrace(i+1, sum, path, results)
+			sum -= i
+			path = path[:len(path)-1]
+		}
+	}
+
+	backTrace(1, 0, path, &results)
+	return results
+}
+
+// 217. 存在重复元素
+func containsDuplicate(nums []int) bool {
+	sort.Ints(nums)
+	for i := 1; i < len(nums); i++ {
+		if nums[i] == nums[i-1] {
+			return true
+		}
+	}
+	return false
+}
+
+// 219. 存在重复元素 II
+func containsNearbyDuplicate(nums []int, k int) bool {
+	for start, end := 0, 1; start < end && start < len(nums); {
+		if k < end-start || end >= len(nums) {
+			start++
+			end = start + 1
+		} else {
+			if nums[start] == nums[end] {
+				return true
+			}
+			if end < len(nums) {
+				end++
+			}
+		}
+	}
+
+	return false
+}
+
+// 221. 最大正方形
+func maximalSquare(matrix [][]byte) int {
+	m, n := len(matrix), 0
+	if m > 0 {
+		n = len(matrix[0])
+	}
+	dp := make([][]int, m)
+	for i := 0; i < m; i++ {
+		dp[i] = make([]int, n)
+	}
+
+	max := 0
+	for i := 0; i < m; i++ {
+		for j := 0; j < n; j++ {
+			dp[i][j] = int(matrix[i][j] - '0')
+			if dp[i][j] == 1 {
+				if max == 0 {
+					max = 1
+				}
+				if i > 0 && j > 0 {
+					if dp[i-1][j] > 0 &&
+						dp[i][j-1] > 0 &&
+						dp[i-1][j-1] > 0 {
+						temp := dp[i-1][j]
+						//[i-1][j] == [i][j-1] 的情况
+						if dp[i-1][j] == dp[i][j-1] {
+							if temp > dp[i-1][j-1] {
+								temp = dp[i-1][j-1]
+							}
+						} else {
+							if dp[i-1][j] > dp[i][j-1] {
+								temp = dp[i][j-1]
+							}
+						}
+						side := int(math.Sqrt(float64(temp))) + 1
+						dp[i][j] = side * side
+						if max < dp[i][j] {
+							max = dp[i][j]
+						}
+					}
+				}
+			}
+		}
+	}
+	return max
+}
+
+// 264. 丑数 II
+// [1, 2, 3, 4, 5, 6, 8, 9, 10, 12] 是由前 10 个丑数组成的序列。
+func nthUglyNumber(n int) int {
+	dp := make([]int, n+1)
+	dp[1] = 1
+	p2, p3, p5 := 1, 1, 1
+	for i := 2; i <= n; i++ {
+		res2, res3, res5 := dp[p2]*2, dp[p3]*3, dp[p5]*5
+		dp[i] = int(math.Min(math.Min(float64(res2), float64(res3)), float64(res5)))
+		if dp[i] == dp[p2]*2 {
+			p2++
+		}
+		if dp[i] == dp[p3]*3 {
+			p3++
+		}
+		if dp[i] == dp[p5]*5 {
+			p5++
+		}
+	}
+	return dp[n]
+}
