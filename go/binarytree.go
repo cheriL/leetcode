@@ -532,5 +532,16 @@ func balanceBST(root *TreeNode) *TreeNode {
 
 // 230. 二叉搜索树中第K小的元素
 func kthSmallest(root *TreeNode, k int) int {
-
+	var valList []int
+	var traversal func(*TreeNode)
+	traversal = func(node *TreeNode) {
+		if node == nil {
+			return
+		}
+		traversal(node.Left)
+		valList = append(valList, node.Val)
+		traversal(node.Right)
+	}
+	traversal(root)
+	return valList[k-1]
 }
