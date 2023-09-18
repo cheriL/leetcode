@@ -501,3 +501,36 @@ func invertTree(root *TreeNode) *TreeNode {
 	invert(root)
 	return root
 }
+
+// 1382. 将二叉搜索树变平衡
+func balanceBST(root *TreeNode) *TreeNode {
+	var nodeList []*TreeNode
+	var traversal func(*TreeNode)
+	traversal = func(node *TreeNode) {
+		if node == nil {
+			return
+		}
+		traversal(node.Left)
+		nodeList = append(nodeList, node)
+		traversal(node.Right)
+		node.Left, node.Right = nil, nil
+	}
+	var buildAvgTree func([]*TreeNode, int, int) *TreeNode
+	buildAvgTree = func(nodes []*TreeNode, start int, end int) *TreeNode {
+		if start > end {
+			return nil
+		}
+		mid := (start + end) / 2
+		nodes[mid].Left = buildAvgTree(nodes, start, mid-1)
+		nodes[mid].Right = buildAvgTree(nodes, mid+1, end)
+		return nodes[mid]
+	}
+	traversal(root)
+	root = buildAvgTree(nodeList, 0, len(nodeList)-1)
+	return root
+}
+
+// 230. 二叉搜索树中第K小的元素
+func kthSmallest(root *TreeNode, k int) int {
+
+}
