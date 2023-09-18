@@ -1415,3 +1415,50 @@ func containsNearbyDuplicate(nums []int, k int) bool {
 
 	return false
 }
+
+// 221. 最大正方形
+func maximalSquare(matrix [][]byte) int {
+	m, n := len(matrix), 0
+	if m > 0 {
+		n = len(matrix[0])
+	}
+	dp := make([][]int, m)
+	for i := 0; i < m; i++ {
+		dp[i] = make([]int, n)
+	}
+
+	max := 0
+	for i := 0; i < m; i++ {
+		for j := 0; j < n; j++ {
+			dp[i][j] = int(matrix[i][j] - '0')
+			if dp[i][j] == 1 {
+				if max == 0 {
+					max = 1
+				}
+				if i > 0 && j > 0 {
+					if dp[i-1][j] > 0 &&
+						dp[i][j-1] > 0 &&
+						dp[i-1][j-1] > 0 {
+						temp := dp[i-1][j]
+						//[i-1][j] == [i][j-1] 的情况
+						if dp[i-1][j] == dp[i][j-1] {
+							if temp > dp[i-1][j-1] {
+								temp = dp[i-1][j-1]
+							}
+						} else {
+							if dp[i-1][j] > dp[i][j-1] {
+								temp = dp[i][j-1]
+							}
+						}
+						side := int(math.Sqrt(float64(temp))) + 1
+						dp[i][j] = side * side
+						if max < dp[i][j] {
+							max = dp[i][j]
+						}
+					}
+				}
+			}
+		}
+	}
+	return max
+}
