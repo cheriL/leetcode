@@ -1100,3 +1100,24 @@ func removeNthFromEnd(head *ListNode, n int) *ListNode {
 	}
 	return dummyNode.Next
 }
+
+// LCR 022. 环形链表 II
+func detectCycle1(head *ListNode) *ListNode {
+	p, q := head, head
+	for {
+		if p == nil || p.Next == nil {
+			return nil
+		}
+		p = p.Next.Next
+		q = q.Next
+		if p == q {
+			break
+		}
+	}
+	p = head
+	for p != q {
+		p = p.Next
+		q = q.Next
+	}
+	return p
+}
