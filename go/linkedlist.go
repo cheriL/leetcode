@@ -1139,3 +1139,21 @@ func getIntersectionNode1(headA, headB *ListNode) *ListNode {
 	}
 	return p
 }
+
+// 面试题 02.04. 分割链表
+func partition1(head *ListNode, x int) *ListNode {
+	dummyNode, dummyNode2 := &ListNode{}, &ListNode{}
+	p, q := dummyNode, dummyNode2
+	for i := head; i != nil; i = i.Next {
+		node := &ListNode{Val: i.Val}
+		if node.Val < x {
+			p.Next = node
+			p = node
+		} else {
+			q.Next = node
+			q = node
+		}
+	}
+	p.Next = dummyNode2.Next
+	return dummyNode.Next
+}
