@@ -683,3 +683,52 @@ func lowestCommonAncestor2(root, p, q *TreeNode) *TreeNode {
 	}
 	return node
 }
+
+// 450. 删除二叉搜索树中的节点
+func deleteNode1(root *TreeNode, key int) *TreeNode {
+	var findLeaf func(*TreeNode) *TreeNode
+	findLeaf = func(node *TreeNode) *TreeNode {
+		if node == nil {
+			return nil
+		}
+		if node.Left == nil {
+			return node
+		}
+		return findLeaf(node.Left)
+	}
+	var delFn func(*TreeNode, *TreeNode, int) *TreeNode
+	delFn = func(node *TreeNode, parent *TreeNode, key int) *TreeNode {
+		if node == nil {
+			return nil
+		}
+		if key < node.Val {
+			delFn(node.Left, node, key)
+			return node
+		} else if key > node.Val {
+			delFn(node.Right, node, key)
+			return node
+		}
+
+		child, right := node.Left, node.Right
+		if child != nil {
+			leaf := findLeaf(right)
+			if leaf != nil {
+				leaf.Left = child.Right
+				child.Right = right
+			}
+		} else {
+			child = node.Right
+		}
+		if parent == nil {
+			return child
+		}
+
+		if node == parent.Left {
+			parent.Left = child
+		} else {
+			parent.Right = child
+		}
+		return parent
+	}
+	return delFn(root, nil, key)
+}
