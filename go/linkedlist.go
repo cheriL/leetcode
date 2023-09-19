@@ -1157,3 +1157,19 @@ func partition1(head *ListNode, x int) *ListNode {
 	p.Next = dummyNode2.Next
 	return dummyNode.Next
 }
+
+// 138. 复制带随机指针的链表
+func copyRandomList(head *RandomNode) *RandomNode {
+	nodeMap := map[*RandomNode]*RandomNode{}
+	for p := head; p != nil; p = p.Next {
+		if _, ok := nodeMap[p]; !ok {
+			nodeMap[p] = &RandomNode{}
+		}
+	}
+	for oldNode, newNode := range nodeMap {
+		newNode.Val = oldNode.Val
+		newNode.Next = nodeMap[oldNode.Next]
+		newNode.Random = nodeMap[oldNode.Random]
+	}
+	return nodeMap[head]
+}

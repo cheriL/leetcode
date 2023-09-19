@@ -17,3 +17,9 @@ type Node struct {
 	Right *Node
 	Next  *Node
 }
+
+type RandomNode struct {
+	Val    int
+	Next   *RandomNode
+	Random *RandomNode
+}
