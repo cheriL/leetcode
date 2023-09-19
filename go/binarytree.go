@@ -608,6 +608,52 @@ func lowestCommonAncestor(root, p, q *TreeNode) *TreeNode {
 		if node == nil {
 			return false, nil
 		}
+
+		if node.Val == p.Val || node.Val == q.Val {
+			findAnother, val := false, node.Val
+			if node.Val == p.Val {
+				val = q.Val
+			} else {
+				val = p.Val
+			}
+			if val > node.Val {
+				findAnother, _ = findFn(node.Right)
+			} else {
+				findAnother, _ = findFn(node.Left)
+			}
+			if findAnother {
+				return true, node
+			}
+			return true, nil
+		}
+
+		find, res := findFn(node.Left)
+		find2, res2 := findFn(node.Right)
+		if find && find2 {
+			return true, node
+		}
+		if res != nil {
+			return find, res
+		}
+		if res2 != nil {
+			return find2, res2
+		}
+		return find || find2, nil
+	}
+	_, node := findFn(root)
+	if node == nil {
+		node = root
+	}
+	return node
+}
+
+// 236. 二叉树的最近公共祖先
+func lowestCommonAncestor2(root, p, q *TreeNode) *TreeNode {
+	var findFn func(*TreeNode) (bool, *TreeNode)
+	findFn = func(node *TreeNode) (findOne bool, common *TreeNode) {
+		if node == nil {
+			return false, nil
+		}
 		if node == p || node == q {
 			findAnother := false
 			if findAnother, _ = findFn(node.Left); !findAnother {
