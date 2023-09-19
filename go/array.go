@@ -1484,3 +1484,76 @@ func nthUglyNumber(n int) int {
 	}
 	return dp[n]
 }
+
+// 73. 矩阵置零
+func setZeroes(matrix [][]int) {
+	mSet := map[int]struct{}{}
+	nSet := map[int]struct{}{}
+	m, n := len(matrix), 0
+	if m > 0 {
+		n = len(matrix[0])
+	}
+	for i := 0; i < m; i++ {
+		for j := 0; j < n; j++ {
+			if matrix[i][j] == 0 {
+				mSet[i] = struct{}{}
+				nSet[j] = struct{}{}
+			}
+		}
+	}
+	for key := range mSet {
+		for i := 0; i < n; i++ {
+			matrix[key][i] = 0
+		}
+	}
+	for key := range nSet {
+		for i := 0; i < m; i++ {
+			matrix[i][key] = 0
+		}
+	}
+}
+
+// 74. 搜索二维矩阵
+func searchMatrix(matrix [][]int, target int) bool {
+	nums := make([]int, len(matrix))
+	for i := 0; i < len(matrix); i++ {
+		nums[i] = matrix[i][0]
+	}
+
+	var binarySearch func([]int, int, int, int) int
+	binarySearch = func(nums []int, start int, end int, target int) int {
+		if start >= end {
+			if start < len(nums) {
+				if nums[start] > target {
+					return start - 1
+				}
+				if nums[start] <= target {
+					return start
+				}
+			} else {
+				return -1
+			}
+		}
+
+		mid := (start + end) / 2
+		if nums[mid] == target {
+			return mid
+		} else if nums[mid] > target {
+			return binarySearch(nums, start, mid-1, target)
+		} else {
+			return binarySearch(nums, mid+1, end, target)
+		}
+	}
+	idx1 := binarySearch(nums, 0, len(nums)-1, target)
+	if idx1 < 0 {
+		return false
+	}
+	if matrix[idx1][0] == target {
+		return true
+	}
+	idx2 := binarySearch(matrix[idx1], 1, len(matrix[idx1])-1, target)
+	if idx2 > 0 && matrix[idx1][idx2] == target {
+		return true
+	}
+	return false
+}
