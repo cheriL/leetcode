@@ -600,3 +600,40 @@ func validateBinaryTreeNodes(n int, leftChild []int, rightChild []int) bool {
 
 	return build(root) && len(treeSet) == n
 }
+
+// 235. 二叉搜索树的最近公共祖先
+func lowestCommonAncestor(root, p, q *TreeNode) *TreeNode {
+	var findFn func(*TreeNode) (bool, *TreeNode)
+	findFn = func(node *TreeNode) (findOne bool, common *TreeNode) {
+		if node == nil {
+			return false, nil
+		}
+		if node == p || node == q {
+			findAnother := false
+			if findAnother, _ = findFn(node.Left); !findAnother {
+				findAnother, _ = findFn(node.Right)
+			}
+			if findAnother {
+				return true, node
+			}
+			return true, nil
+		}
+		find, res := findFn(node.Left)
+		find2, res2 := findFn(node.Right)
+		if find && find2 {
+			return true, node
+		}
+		if res != nil {
+			return find, res
+		}
+		if res2 != nil {
+			return find2, res2
+		}
+		return find || find2, nil
+	}
+	_, node := findFn(root)
+	if node == nil {
+		node = root
+	}
+	return node
+}
