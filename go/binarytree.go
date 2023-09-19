@@ -600,3 +600,135 @@ func validateBinaryTreeNodes(n int, leftChild []int, rightChild []int) bool {
 
 	return build(root) && len(treeSet) == n
 }
+
+// 235. 二叉搜索树的最近公共祖先
+func lowestCommonAncestor(root, p, q *TreeNode) *TreeNode {
+	var findFn func(*TreeNode) (bool, *TreeNode)
+	findFn = func(node *TreeNode) (findOne bool, common *TreeNode) {
+		if node == nil {
+			return false, nil
+		}
+
+		if node.Val == p.Val || node.Val == q.Val {
+			findAnother, val := false, node.Val
+			if node.Val == p.Val {
+				val = q.Val
+			} else {
+				val = p.Val
+			}
+			if val > node.Val {
+				findAnother, _ = findFn(node.Right)
+			} else {
+				findAnother, _ = findFn(node.Left)
+			}
+			if findAnother {
+				return true, node
+			}
+			return true, nil
+		}
+
+		find, res := findFn(node.Left)
+		find2, res2 := findFn(node.Right)
+		if find && find2 {
+			return true, node
+		}
+		if res != nil {
+			return find, res
+		}
+		if res2 != nil {
+			return find2, res2
+		}
+		return find || find2, nil
+	}
+	_, node := findFn(root)
+	if node == nil {
+		node = root
+	}
+	return node
+}
+
+// 236. 二叉树的最近公共祖先
+func lowestCommonAncestor2(root, p, q *TreeNode) *TreeNode {
+	var findFn func(*TreeNode) (bool, *TreeNode)
+	findFn = func(node *TreeNode) (findOne bool, common *TreeNode) {
+		if node == nil {
+			return false, nil
+		}
+		if node == p || node == q {
+			findAnother := false
+			if findAnother, _ = findFn(node.Left); !findAnother {
+				findAnother, _ = findFn(node.Right)
+			}
+			if findAnother {
+				return true, node
+			}
+			return true, nil
+		}
+		find, res := findFn(node.Left)
+		find2, res2 := findFn(node.Right)
+		if find && find2 {
+			return true, node
+		}
+		if res != nil {
+			return find, res
+		}
+		if res2 != nil {
+			return find2, res2
+		}
+		return find || find2, nil
+	}
+	_, node := findFn(root)
+	if node == nil {
+		node = root
+	}
+	return node
+}
+
+// 450. 删除二叉搜索树中的节点
+func deleteNode1(root *TreeNode, key int) *TreeNode {
+	var findLeaf func(*TreeNode) *TreeNode
+	findLeaf = func(node *TreeNode) *TreeNode {
+		if node == nil {
+			return nil
+		}
+		if node.Left == nil {
+			return node
+		}
+		return findLeaf(node.Left)
+	}
+	var delFn func(*TreeNode, *TreeNode, int) *TreeNode
+	delFn = func(node *TreeNode, parent *TreeNode, key int) *TreeNode {
+		if node == nil {
+			return nil
+		}
+		if key < node.Val {
+			delFn(node.Left, node, key)
+			return node
+		} else if key > node.Val {
+			delFn(node.Right, node, key)
+			return node
+		}
+
+		child, right := node.Left, node.Right
+		if child != nil {
+			leaf := findLeaf(right)
+			if leaf != nil {
+				leaf.Left = child.Right
+				child.Right = right
+			}
+		} else {
+			child = node.Right
+		}
+		if parent == nil {
+			return child
+		}
+
+		if node == parent.Left {
+			parent.Left = child
+		} else {
+			parent.Right = child
+		}
+		return parent
+	}
+	return delFn(root, nil, key)
+}
