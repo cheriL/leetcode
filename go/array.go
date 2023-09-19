@@ -1557,3 +1557,111 @@ func searchMatrix(matrix [][]int, target int) bool {
 	}
 	return false
 }
+
+// 912. 排序数组
+func sortArray(nums []int) []int {
+	var buildMaxHeap func([]int, int)
+	var maxHeapify func([]int, int, int)
+	var heapSort func([]int)
+	buildMaxHeap = func(nums []int, len int) {
+		for i := len / 2; i >= 0; i-- {
+			maxHeapify(nums, len, i)
+		}
+	}
+	maxHeapify = func(nums []int, len int, idx int) {
+		left, right, maxIdx := idx*2+1, idx*2+2, idx
+		if left < len && nums[left] > nums[maxIdx] {
+			maxIdx = left
+		}
+		if right < len && nums[right] > nums[maxIdx] {
+			maxIdx = right
+		}
+		if maxIdx == left || maxIdx == right {
+			nums[maxIdx], nums[idx] = nums[idx], nums[maxIdx]
+			maxHeapify(nums, len, maxIdx)
+		}
+	}
+	heapSort = func(nums []int) {
+		length := len(nums)
+		buildMaxHeap(nums, length)
+		for i := length - 1; i > 0; i-- {
+			nums[0], nums[i] = nums[i], nums[0]
+			length--
+			maxHeapify(nums, length, 0)
+		}
+	}
+
+	var quickSort func([]int, int, int)
+	quickSort = func(nums []int, start, end int) {
+		if start >= end {
+			return
+		}
+		target := nums[start]
+		i, j := start, end
+		for i < j {
+			for nums[j] > target && i < j {
+				j--
+			}
+			if i < j {
+				nums[i] = nums[j]
+				i++
+			}
+			for nums[i] < target && i < j {
+				i++
+			}
+			if i < j {
+				nums[j] = nums[i]
+				j--
+			}
+		}
+		nums[i] = target
+		quickSort(nums, start, i-1)
+		quickSort(nums, i+1, end)
+	}
+
+	var mergeFn func([]int, int, int, int, []int)
+	var mergeSort func([]int, int, int, []int)
+	mergeFn = func(nums []int, start int, mid int, end int, temp []int) {
+		i, j, k := start, mid+1, start
+		for i <= mid && j <= end {
+			if temp[i] > temp[j] {
+				nums[k] = temp[j]
+				j++
+			} else {
+				nums[k] = temp[i]
+				i++
+			}
+			k++
+		}
+		for i <= mid {
+			nums[k] = temp[i]
+			i++
+			k++
+		}
+		for j <= end {
+			nums[k] = temp[j]
+			j++
+			k++
+		}
+		for i := start; i <= end; i++ {
+			temp[i] = nums[i]
+		}
+	}
+	mergeSort = func(nums []int, start int, end int, temp []int) {
+		if start == end {
+			temp[start] = nums[start]
+			return
+		}
+		mid := (start + end) / 2
+		mergeSort(nums, start, mid, temp)
+		mergeSort(nums, mid+1, end, temp)
+		mergeFn(nums, start, mid, end, temp)
+	}
+
+	heapSort([]int{})
+	quickSort([]int{}, 0, 0)
+	temp := make([]int, len(nums))
+	mergeSort(nums, 0, len(nums)-1, temp)
+
+	return nums
+}
