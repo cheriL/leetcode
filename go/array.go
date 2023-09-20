@@ -1707,3 +1707,23 @@ func majorityElement2(nums []int) []int {
 
 	return results
 }
+
+// 198. 打家劫舍
+func rob(nums []int) int {
+	if len(nums) == 1 {
+		return nums[0]
+	}
+	max_1, dp_1, dp_2 := 0, 0, 0
+	result := 0
+	for i := 0; i < len(nums); i++ {
+		dp_2 = max_1 + nums[i]
+		if dp_1 > max_1 {
+			max_1 = dp_1
+		}
+		if dp_2 > result {
+			result = dp_2
+		}
+		dp_1 = dp_2
+	}
+	return result
+}
