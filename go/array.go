@@ -1727,3 +1727,36 @@ func rob(nums []int) int {
 	}
 	return result
 }
+
+// 213. 打家劫舍 II
+func rob2(nums []int) int {
+	if len(nums) == 1 {
+		return nums[0]
+	}
+	max_1, dp_1, dp_2 := 0, 0, 0
+	result := 0
+	for i := 0; i < len(nums)-1; i++ {
+		dp_2 = max_1 + nums[i]
+		if dp_1 > max_1 {
+			max_1 = dp_1
+		}
+		if dp_2 > result {
+			result = dp_2
+		}
+		dp_1 = dp_2
+	}
+
+	max_1, dp_1, dp_2 = 0, 0, 0
+	for i := 1; i < len(nums); i++ {
+		dp_2 = max_1 + nums[i]
+		if dp_1 > max_1 {
+			max_1 = dp_1
+		}
+		if dp_2 > result {
+			result = dp_2
+		}
+		dp_1 = dp_2
+	}
+
+	return result
+}
