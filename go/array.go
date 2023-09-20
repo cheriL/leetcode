@@ -1665,3 +1665,45 @@ func sortArray(nums []int) []int {
 
 	return nums
 }
+
+// 229. 多数元素 II :尝试设计时间复杂度为 O(n)、空间复杂度为 O(1)的算法
+func majorityElement2(nums []int) []int {
+	val1, val2 := 0, 0
+	count1, count2 := 0, 0
+	for i := 0; i < len(nums); i++ {
+		if nums[i] == val1 && count1 > 0 {
+			count1++
+		} else if nums[i] == val2 && count2 > 0 {
+			count2++
+		} else if count1 == 0 {
+			val1 = nums[i]
+			count1++
+		} else if count2 == 0 {
+			val2 = nums[i]
+			count2++
+		} else {
+			count1--
+			count2--
+		}
+	}
+
+	c1, c2 := 0, 0
+	for i := 0; i < len(nums); i++ {
+		if nums[i] == val1 && count1 > 0 {
+			c1++
+		}
+		if val2 != val1 && nums[i] == val2 && count2 > 0 {
+			c2++
+		}
+	}
+
+	var results []int
+	if c1 > len(nums)/3 {
+		results = append(results, val1)
+	}
+	if c2 > len(nums)/3 {
+		results = append(results, val2)
+	}
+
+	return results
+}
