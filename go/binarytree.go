@@ -732,3 +732,40 @@ func deleteNode1(root *TreeNode, key int) *TreeNode {
 	}
 	return delFn(root, nil, key)
 }
+
+// 337. 打家劫舍 III
+func rob3(root *TreeNode) int {
+	max := 0
+	var robTree func(*TreeNode) (int, int)
+	robTree = func(node *TreeNode) (m int, bm int) {
+		if node == nil {
+			return 0, 0
+		}
+		left, bLeft := robTree(node.Left)
+		right, bRight := robTree(node.Right)
+
+		// 包含当前节点时的最大值
+		m = node.Val + bLeft + bRight
+		if m > max {
+			max = m
+		}
+
+		//所有子树可达到的最大值
+		if bLeft > left {
+			bm += bLeft
+		} else {
+			bm += left
+		}
+		if bRight > right {
+			bm += bRight
+		} else {
+			bm += right
+		}
+		if bm > max {
+			max = bm
+		}
+		return
+	}
+	robTree(root)
+	return max
+}
