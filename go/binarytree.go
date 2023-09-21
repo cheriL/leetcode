@@ -4,6 +4,7 @@ package _go
 
 import (
 	"math"
+	"strings"
 )
 
 /*
@@ -768,4 +769,24 @@ func rob3(root *TreeNode) int {
 	}
 	robTree(root)
 	return max
+}
+
+// 331. 验证二叉树的前序序列化
+func isValidSerialization(preorder string) bool {
+	if preorder == "#" {
+		return true
+	}
+	var charStack []string
+	strList := strings.Split(preorder, ",")
+	for _, str := range strList {
+		charStack = append(charStack, str)
+		for len(charStack) > 2 &&
+			charStack[len(charStack)-1] == "#" &&
+			charStack[len(charStack)-2] == "#" &&
+			charStack[len(charStack)-3] != "#" {
+			charStack = charStack[:len(charStack)-3]
+			charStack = append(charStack, "#")
+		}
+	}
+	return len(charStack) == 1 && charStack[0] == "#"
 }
