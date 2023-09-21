@@ -790,3 +790,26 @@ func isValidSerialization(preorder string) bool {
 	}
 	return len(charStack) == 1 && charStack[0] == "#"
 }
+
+// 404. 左叶子之和
+func sumOfLeftLeaves(root *TreeNode) int {
+	sum := 0
+	var sumLeftLeaf func(*TreeNode, *TreeNode)
+	sumLeftLeaf = func(node, parent *TreeNode) {
+		if node == nil {
+			return
+		}
+
+		if node.Left == nil && node.Right == nil {
+			if parent != nil && node == parent.Left {
+				sum += node.Val
+			}
+			return
+		}
+
+		sumLeftLeaf(node.Left, node)
+		sumLeftLeaf(node.Right, node)
+	}
+	sumLeftLeaf(root, nil)
+	return sum
+}
