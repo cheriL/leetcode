@@ -1760,3 +1760,99 @@ func rob2(nums []int) int {
 
 	return result
 }
+
+// 238. 除自身以外数组的乘积
+func productExceptSelf(nums []int) []int {
+	if len(nums) == 0 {
+		return nil
+	}
+	l, r := make([]int, len(nums)), make([]int, len(nums))
+	l[0], r[len(nums)-1] = 1, 1
+	for i := 1; i < len(nums); i++ {
+		l[i] = l[i-1] * nums[i-1]
+	}
+	for i := len(nums) - 2; i >= 0; i-- {
+		r[i] = r[i+1] * nums[i+1]
+	}
+	for i := 0; i < len(nums); i++ {
+		l[i] = l[i] * r[i]
+	}
+	return l
+}
+
+// 240. 搜索二维矩阵 II
+func searchMatrix2(matrix [][]int, target int) bool {
+	var binarySearch func([]int, int, int, int) (int, bool)
+	binarySearch = func(nums []int, start int, end int, target int) (int, bool) {
+		if start >= end {
+			if start < len(nums) {
+				if nums[start] == target {
+					return start, true
+				} else {
+					return start, false
+				}
+			} else {
+				return start, false
+			}
+		}
+		mid := (start + end) / 2
+		if nums[mid] == target {
+			return mid, true
+		} else if nums[mid] > target {
+			return binarySearch(nums, start, mid-1, target)
+		} else {
+			return binarySearch(nums, mid+1, end, target)
+		}
+	}
+
+	m, n := len(matrix), 0
+	if m > 0 {
+		n = len(matrix[0])
+	}
+
+	x, y := 0, 0
+	for {
+		w := m
+		if m > n {
+			w = n
+		}
+		//对角线
+		nums := make([]int, w)
+		for i := 0; i < w; i++ {
+			nums[i] = matrix[i+x][i+y]
+		}
+		idx, ok := binarySearch(nums, 0, len(nums)-1, target)
+		if ok {
+			return ok
+		}
+		if idx >= 0 && idx <= len(nums) {
+			for i := 0; i < m; i++ {
+				for j := idx; j < n; j++ {
+					if matrix[i][j] == target {
+						return true
+					}
+				}
+			}
+			for i := idx; i < m; i++ {
+				for j := 0; j < n; j++ {
+					if matrix[i][j] == target {
+						return true
+					}
+				}
+			}
+		}
+
+		//划分区域
+		if m == n {
+			break
+		} else if m > n {
+			x += w
+			m = m - n
+		} else {
+			y += w
+			n = n - m
+		}
+	}
+
+	return false
+}

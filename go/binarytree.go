@@ -4,6 +4,7 @@ package _go
 
 import (
 	"math"
+	"strings"
 )
 
 /*
@@ -768,4 +769,79 @@ func rob3(root *TreeNode) int {
 	}
 	robTree(root)
 	return max
+}
+
+// 331. 验证二叉树的前序序列化
+func isValidSerialization(preorder string) bool {
+	if preorder == "#" {
+		return true
+	}
+	var charStack []string
+	strList := strings.Split(preorder, ",")
+	for _, str := range strList {
+		charStack = append(charStack, str)
+		for len(charStack) > 2 &&
+			charStack[len(charStack)-1] == "#" &&
+			charStack[len(charStack)-2] == "#" &&
+			charStack[len(charStack)-3] != "#" {
+			charStack = charStack[:len(charStack)-3]
+			charStack = append(charStack, "#")
+		}
+	}
+	return len(charStack) == 1 && charStack[0] == "#"
+}
+
+// 404. 左叶子之和
+func sumOfLeftLeaves(root *TreeNode) int {
+	sum := 0
+	var sumLeftLeaf func(*TreeNode, *TreeNode)
+	sumLeftLeaf = func(node, parent *TreeNode) {
+		if node == nil {
+			return
+		}
+
+		if node.Left == nil && node.Right == nil {
+			if parent != nil && node == parent.Left {
+				sum += node.Val
+			}
+			return
+		}
+
+		sumLeftLeaf(node.Left, node)
+		sumLeftLeaf(node.Right, node)
+	}
+	sumLeftLeaf(root, nil)
+	return sum
+}
+
+// 508. 出现次数最多的子树元素和
+func findFrequentTreeSum(root *TreeNode) []int {
+	countMap := map[int]int{}
+	var traversal func(node *TreeNode) int
+	traversal = func(node *TreeNode) int {
+		if node == nil {
+			return 0
+		}
+		left, right := traversal(node.Left), traversal(node.Right)
+		sum := node.Val + left + right
+		if _, ok := countMap[sum]; ok {
+			countMap[sum]++
+		} else {
+			countMap[sum] = 1
+		}
+		return sum
+	}
+	traversal(root)
+
+	var results []int
+	mCount := 0
+	for k, v := range countMap {
+		if v == mCount {
+			results = append(results, k)
+		} else if v > mCount {
+			results = []int{k}
+			mCount = v
+		}
+	}
+	return results
 }
