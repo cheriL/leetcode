@@ -1760,3 +1760,22 @@ func rob2(nums []int) int {
 
 	return result
 }
+
+// 238. 除自身以外数组的乘积
+func productExceptSelf(nums []int) []int {
+	if len(nums) == 0 {
+		return nil
+	}
+	l, r := make([]int, len(nums)), make([]int, len(nums))
+	l[0], r[len(nums)-1] = 1, 1
+	for i := 1; i < len(nums); i++ {
+		l[i] = l[i-1] * nums[i-1]
+	}
+	for i := len(nums) - 2; i >= 0; i-- {
+		r[i] = r[i+1] * nums[i+1]
+	}
+	for i := 0; i < len(nums); i++ {
+		l[i] = l[i] * r[i]
+	}
+	return l
+}
