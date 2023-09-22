@@ -878,3 +878,31 @@ func findBottomLeftValue(root *TreeNode) int {
 	}
 	return result
 }
+
+// 515. 在每个树行中找最大值
+func largestValues(root *TreeNode) []int {
+	var results []int
+	nodeList := []*TreeNode{root}
+	for len(nodeList) > 0 {
+		length := len(nodeList)
+		max, find := math.MinInt32, false
+		for i := 0; i < length; i++ {
+			if nodeList[i] != nil {
+				if nodeList[i].Val >= max {
+					max, find = nodeList[i].Val, true
+				}
+				if nodeList[i].Left != nil {
+					nodeList = append(nodeList, nodeList[i].Left)
+				}
+				if nodeList[i].Right != nil {
+					nodeList = append(nodeList, nodeList[i].Right)
+				}
+			}
+		}
+		if find {
+			results = append(results, max)
+		}
+		nodeList = nodeList[length:]
+	}
+	return results
+}
