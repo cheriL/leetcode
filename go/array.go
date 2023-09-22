@@ -1907,3 +1907,36 @@ func missingNumber(nums []int) int {
 	}
 	return sum
 }
+
+// 283. 移动零
+func moveZeroes(nums []int) {
+	for i := 0; i < len(nums); i++ {
+		for j := 0; j < len(nums)-1; j++ {
+			if nums[j] == 0 {
+				nums[j], nums[j+1] = nums[j+1], nums[j]
+			}
+		}
+	}
+}
+
+// 287. 寻找重复数
+// 不修改数组 nums 且空间复杂度O(1)； 时间复杂度O(n)；
+func findDuplicate(nums []int) (result int) {
+	p, q := 0, 0
+	for len(nums) > 0 {
+		p = nums[p]
+		q = nums[nums[q]]
+		if p == q {
+			break
+		}
+	}
+	q = 0
+	for len(nums) > 0 && p != q {
+		p = nums[p]
+		q = nums[q]
+	}
+	result = p
+	return
+}
+
+//
