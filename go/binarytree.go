@@ -845,3 +845,36 @@ func findFrequentTreeSum(root *TreeNode) []int {
 	}
 	return results
 }
+
+// 513. 找树左下角的值
+func findBottomLeftValue(root *TreeNode) int {
+	var result int
+	if root != nil {
+		result = root.Val
+	}
+	nodeList := []*TreeNode{root}
+	for len(nodeList) > 0 {
+		length := len(nodeList)
+		find := false
+		for i := 0; i < length; i++ {
+			if nodeList[i] != nil {
+				if nodeList[i].Left != nil {
+					nodeList = append(nodeList, nodeList[i].Left)
+					if !find {
+						result = nodeList[i].Left.Val
+						find = true
+					}
+				}
+				if nodeList[i].Right != nil {
+					nodeList = append(nodeList, nodeList[i].Right)
+					if !find {
+						result = nodeList[i].Right.Val
+						find = true
+					}
+				}
+			}
+		}
+		nodeList = nodeList[length:]
+	}
+	return result
+}
