@@ -4,6 +4,7 @@
 package _go
 
 import (
+	"fmt"
 	"math"
 	"sort"
 	"strconv"
@@ -1855,4 +1856,44 @@ func searchMatrix2(matrix [][]int, target int) bool {
 	}
 
 	return false
+}
+
+// 228. 汇总区间
+func summaryRanges(nums []int) []string {
+	var intervals []string
+	if len(nums) == 0 {
+		return intervals
+	}
+
+	start, end := nums[0], nums[0]
+
+	rev := false
+	for i := 1; i < len(nums); i++ {
+		if nums[i] < nums[i-1] {
+			rev = true
+		}
+		if !rev && nums[i]-nums[i-1] <= 1 {
+			end++
+			continue
+		}
+		if rev && nums[i-1]-nums[i] <= 1 {
+			start--
+			continue
+		}
+
+		interval := fmt.Sprintf("%d->%d", start, end)
+		if start == end {
+			interval = fmt.Sprintf("%d", start)
+		}
+		intervals = append(intervals, interval)
+		start, end = nums[i], nums[i]
+	}
+
+	interval := fmt.Sprintf("%d->%d", start, end)
+	if start == end {
+		interval = fmt.Sprintf("%d", start)
+	}
+	intervals = append(intervals, interval)
+
+	return intervals
 }
