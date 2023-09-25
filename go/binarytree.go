@@ -906,3 +906,36 @@ func largestValues(root *TreeNode) []int {
 	}
 	return results
 }
+
+// 623. 在二叉树中增加一行
+func addOneRow(root *TreeNode, val int, depth int) *TreeNode {
+	var addFn func(*TreeNode, int)
+	addFn = func(node *TreeNode, d int) {
+		if node == nil {
+			return
+		}
+		if d == depth-1 {
+			newLeftNode := &TreeNode{
+				Val:  val,
+				Left: node.Left,
+			}
+			newRightNode := &TreeNode{
+				Val:   val,
+				Right: node.Right,
+			}
+			node.Left, node.Right = newLeftNode, newRightNode
+			return
+		}
+		addFn(node.Left, d+1)
+		addFn(node.Right, d+1)
+	}
+
+	if root == nil || depth == 1 {
+		return &TreeNode{
+			Val:  val,
+			Left: root,
+		}
+	}
+	addFn(root, 1)
+	return root
+}
