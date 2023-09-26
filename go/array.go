@@ -1939,4 +1939,22 @@ func findDuplicate(nums []int) (result int) {
 	return
 }
 
-//
+// 2582. 递枕头
+func passThePillow(n int, time int) int {
+	if n == 1 {
+		return 1
+	}
+	direct := true
+	i, j := 1, 1
+	for ; i <= time; i++ {
+		if direct && j == n || !direct && j == 1 {
+			direct = !direct
+		}
+		if direct {
+			j++
+		} else {
+			j--
+		}
+	}
+	return j
+}
