@@ -1958,3 +1958,36 @@ func passThePillow(n int, time int) int {
 	}
 	return j
 }
+
+// 300. 最长递增子序列
+func lengthOfLIS(nums []int) int {
+	dp := make([]int, len(nums))
+	dp[0] = 1
+
+	temp := 0
+	var binarySearch func([]int, int, int, int)
+	binarySearch = func(dp []int, start int, end int, target int) {
+		if start > end {
+			return
+		}
+		mid := (start + end) / 2
+		if nums[mid] < target {
+			if dp[mid] > temp {
+				temp = dp[mid]
+			}
+		}
+		binarySearch(dp, start, mid-1, target)
+		binarySearch(dp, mid+1, end, target)
+	}
+
+	max := 1
+	for i := 1; i < len(nums); i++ {
+		temp = 0
+		binarySearch(dp, 0, i-1, nums[i])
+		dp[i] = temp + 1
+		if dp[i] > max {
+			max = dp[i]
+		}
+	}
+	return max
+}
