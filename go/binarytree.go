@@ -845,3 +845,97 @@ func findFrequentTreeSum(root *TreeNode) []int {
 	}
 	return results
 }
+
+// 513. 找树左下角的值
+func findBottomLeftValue(root *TreeNode) int {
+	var result int
+	if root != nil {
+		result = root.Val
+	}
+	nodeList := []*TreeNode{root}
+	for len(nodeList) > 0 {
+		length := len(nodeList)
+		find := false
+		for i := 0; i < length; i++ {
+			if nodeList[i] != nil {
+				if nodeList[i].Left != nil {
+					nodeList = append(nodeList, nodeList[i].Left)
+					if !find {
+						result = nodeList[i].Left.Val
+						find = true
+					}
+				}
+				if nodeList[i].Right != nil {
+					nodeList = append(nodeList, nodeList[i].Right)
+					if !find {
+						result = nodeList[i].Right.Val
+						find = true
+					}
+				}
+			}
+		}
+		nodeList = nodeList[length:]
+	}
+	return result
+}
+
+// 515. 在每个树行中找最大值
+func largestValues(root *TreeNode) []int {
+	var results []int
+	nodeList := []*TreeNode{root}
+	for len(nodeList) > 0 {
+		length := len(nodeList)
+		max, find := math.MinInt32, false
+		for i := 0; i < length; i++ {
+			if nodeList[i] != nil {
+				if nodeList[i].Val >= max {
+					max, find = nodeList[i].Val, true
+				}
+				if nodeList[i].Left != nil {
+					nodeList = append(nodeList, nodeList[i].Left)
+				}
+				if nodeList[i].Right != nil {
+					nodeList = append(nodeList, nodeList[i].Right)
+				}
+			}
+		}
+		if find {
+			results = append(results, max)
+		}
+		nodeList = nodeList[length:]
+	}
+	return results
+}
+
+// 623. 在二叉树中增加一行
+func addOneRow(root *TreeNode, val int, depth int) *TreeNode {
+	var addFn func(*TreeNode, int)
+	addFn = func(node *TreeNode, d int) {
+		if node == nil {
+			return
+		}
+		if d == depth-1 {
+			newLeftNode := &TreeNode{
+				Val:  val,
+				Left: node.Left,
+			}
+			newRightNode := &TreeNode{
+				Val:   val,
+				Right: node.Right,
+			}
+			node.Left, node.Right = newLeftNode, newRightNode
+			return
+		}
+		addFn(node.Left, d+1)
+		addFn(node.Right, d+1)
+	}
+
+	if root == nil || depth == 1 {
+		return &TreeNode{
+			Val:  val,
+			Left: root,
+		}
+	}
+	addFn(root, 1)
+	return root
+}

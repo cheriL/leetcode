@@ -4,6 +4,7 @@
 package _go
 
 import (
+	"fmt"
 	"math"
 	"sort"
 	"strconv"
@@ -1855,4 +1856,138 @@ func searchMatrix2(matrix [][]int, target int) bool {
 	}
 
 	return false
+}
+
+// 228. 汇总区间
+func summaryRanges(nums []int) []string {
+	var intervals []string
+	if len(nums) == 0 {
+		return intervals
+	}
+
+	start, end := nums[0], nums[0]
+
+	rev := false
+	for i := 1; i < len(nums); i++ {
+		if nums[i] < nums[i-1] {
+			rev = true
+		}
+		if !rev && nums[i]-nums[i-1] <= 1 {
+			end++
+			continue
+		}
+		if rev && nums[i-1]-nums[i] <= 1 {
+			start--
+			continue
+		}
+
+		interval := fmt.Sprintf("%d->%d", start, end)
+		if start == end {
+			interval = fmt.Sprintf("%d", start)
+		}
+		intervals = append(intervals, interval)
+		start, end = nums[i], nums[i]
+	}
+
+	interval := fmt.Sprintf("%d->%d", start, end)
+	if start == end {
+		interval = fmt.Sprintf("%d", start)
+	}
+	intervals = append(intervals, interval)
+
+	return intervals
+}
+
+// 268. 丢失的数字
+func missingNumber(nums []int) int {
+	sum := 0
+	for i := 0; i < len(nums); i++ {
+		sum += i + 1
+		sum -= nums[i]
+	}
+	return sum
+}
+
+// 283. 移动零
+func moveZeroes(nums []int) {
+	for i := 0; i < len(nums); i++ {
+		for j := 0; j < len(nums)-1; j++ {
+			if nums[j] == 0 {
+				nums[j], nums[j+1] = nums[j+1], nums[j]
+			}
+		}
+	}
+}
+
+// 287. 寻找重复数
+// 不修改数组 nums 且空间复杂度O(1)； 时间复杂度O(n)；
+func findDuplicate(nums []int) (result int) {
+	p, q := 0, 0
+	for len(nums) > 0 {
+		p = nums[p]
+		q = nums[nums[q]]
+		if p == q {
+			break
+		}
+	}
+	q = 0
+	for len(nums) > 0 && p != q {
+		p = nums[p]
+		q = nums[q]
+	}
+	result = p
+	return
+}
+
+// 2582. 递枕头
+func passThePillow(n int, time int) int {
+	if n == 1 {
+		return 1
+	}
+	direct := true
+	i, j := 1, 1
+	for ; i <= time; i++ {
+		if direct && j == n || !direct && j == 1 {
+			direct = !direct
+		}
+		if direct {
+			j++
+		} else {
+			j--
+		}
+	}
+	return j
+}
+
+// 300. 最长递增子序列
+func lengthOfLIS(nums []int) int {
+	dp := make([]int, len(nums))
+	dp[0] = 1
+
+	temp := 0
+	var binarySearch func([]int, int, int, int)
+	binarySearch = func(dp []int, start int, end int, target int) {
+		if start > end {
+			return
+		}
+		mid := (start + end) / 2
+		if nums[mid] < target {
+			if dp[mid] > temp {
+				temp = dp[mid]
+			}
+		}
+		binarySearch(dp, start, mid-1, target)
+		binarySearch(dp, mid+1, end, target)
+	}
+
+	max := 1
+	for i := 1; i < len(nums); i++ {
+		temp = 0
+		binarySearch(dp, 0, i-1, nums[i])
+		dp[i] = temp + 1
+		if dp[i] > max {
+			max = dp[i]
+		}
+	}
+	return max
 }
