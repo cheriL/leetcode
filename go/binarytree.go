@@ -939,3 +939,31 @@ func addOneRow(root *TreeNode, val int, depth int) *TreeNode {
 	addFn(root, 1)
 	return root
 }
+
+// 889. 根据前序和后序遍历构造二叉树
+func constructFromPrePost(preorder []int, postorder []int) *TreeNode {
+	var buildTreeFn func([]int, []int) *TreeNode
+	buildTreeFn = func(preorder []int, postorder []int) *TreeNode {
+		if len(preorder) == 0 {
+			return nil
+		}
+
+		node := &TreeNode{
+			Val: preorder[0],
+		}
+		if len(preorder) == 1 {
+			return node
+		}
+		idx := -1
+		for i := 0; i < len(postorder); i++ {
+			if postorder[i] == preorder[1] {
+				idx = i
+				break
+			}
+		}
+		node.Left = buildTreeFn(preorder[1:idx+2], postorder[:idx+1])
+		node.Right = buildTreeFn(preorder[idx+2:], postorder[idx+1:len(postorder)-1])
+		return node
+	}
+	return buildTreeFn(preorder, postorder)
+}
