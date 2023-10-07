@@ -4,6 +4,7 @@ package _go
 
 import (
 	"math"
+	"sort"
 	"strings"
 )
 
@@ -966,4 +967,27 @@ func constructFromPrePost(preorder []int, postorder []int) *TreeNode {
 		return node
 	}
 	return buildTreeFn(preorder, postorder)
+}
+
+// 530. 二叉搜索树的最小绝对差
+func getMinimumDifference(root *TreeNode) int {
+	var valList []int
+	var traversal func(*TreeNode)
+	traversal = func(node *TreeNode) {
+		if node == nil {
+			return
+		}
+		valList = append(valList, node.Val)
+		traversal(node.Left)
+		traversal(node.Right)
+	}
+	traversal(root)
+	sort.Ints(valList)
+	min := math.MaxInt32
+	for i := 1; i < len(valList); i++ {
+		if temp := valList[i] - valList[i-1]; temp < min {
+			min = temp
+		}
+	}
+	return min
 }
