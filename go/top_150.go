@@ -36,8 +36,8 @@ func removeElement(nums []int, val int) int {
 	return length
 }
 
-// 26. 删除有序数组中的重复项 1 1 1 2
-func removeDuplicates2(nums []int) int {
+// 26. 删除有序数组中的重复项
+func removeDuplicates(nums []int) int {
 	length := len(nums)
 	if length <= 1 {
 		return length
