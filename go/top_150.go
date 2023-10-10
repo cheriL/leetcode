@@ -52,7 +52,7 @@ func removeDuplicates(nums []int) int {
 	return index
 }
 
-// 121. 买卖股票的最佳时机 7,1,5,3,6,4
+// 121. 买卖股票的最佳时机
 func maxProfit(prices []int) int {
 	lowestPrice := prices[0]
 	profit := 0
@@ -65,4 +65,23 @@ func maxProfit(prices []int) int {
 		}
 	}
 	return profit
+}
+
+// 122. 买卖股票的最佳时机 II 7,1,5,3,6,4
+func maxProfit2(prices []int) int {
+	dp := make([]int, len(prices))
+	for i := 1; i < len(prices); i++ {
+		maxP := 0
+		for j := 0; j < i; j++ {
+			profit := dp[j]
+			if prices[i] > prices[j] {
+				profit += prices[i] - prices[j]
+			}
+			if profit > maxP {
+				maxP = profit
+			}
+		}
+		dp[i] = maxP
+	}
+	return dp[len(prices)-1]
 }
