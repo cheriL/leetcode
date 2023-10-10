@@ -575,28 +575,3 @@ func swapPairs(head *ListNode) *ListNode {
 	}
 	return dummyNode.Next
 }
-
-// 移除元素 原地移除，空间O1
-func removeElement(nums []int, val int) int {
-	length := len(nums)
-	if length == 0 {
-		return 0
-	}
-
-	start, end := 0, len(nums)-1
-	for start <= end {
-		if nums[start] != val {
-			start++
-		} else {
-			if nums[end] != val {
-				nums[start] = nums[end]
-				start++
-				end--
-			} else {
-				end--
-			}
-		}
-	}
-
-	return end + 1
-}

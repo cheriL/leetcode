@@ -21,3 +21,17 @@ func merge2(nums1 []int, m int, nums2 []int, n int) {
 		k--
 	}
 }
+
+// 27. 移除元素
+func removeElement(nums []int, val int) int {
+	length := len(nums)
+	for i := 0; i < length; {
+		if nums[i] == val {
+			nums[i] = nums[length-1]
+			length--
+		} else {
+			i++
+		}
+	}
+	return length
+}
