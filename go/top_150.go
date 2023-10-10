@@ -51,3 +51,18 @@ func removeDuplicates(nums []int) int {
 	}
 	return index
 }
+
+// 121. 买卖股票的最佳时机 7,1,5,3,6,4
+func maxProfit(prices []int) int {
+	lowestPrice := prices[0]
+	profit := 0
+	for i := 1; i < len(prices); i++ {
+		if prices[i]-lowestPrice > profit {
+			profit = prices[i] - lowestPrice
+		}
+		if prices[i] < lowestPrice {
+			lowestPrice = prices[i]
+		}
+	}
+	return profit
+}
