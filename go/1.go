@@ -257,37 +257,6 @@ func intToRoman(num int) string {
 	return thousands[num/1000] + hundreds[num%1000/100] + tens[num%100/10] + ones[num%10]
 }
 
-// 最长公共前缀 1 <= strs.length <= 200
-func longestCommonPrefix(strs []string) string {
-	length := len(strs)
-	if length == 0 {
-		return ""
-	}
-
-	var lcp func(int, int) string
-	// start, end使用下标
-	lcp = func(start, end int) string {
-		if start == end {
-			return strs[start]
-		}
-		mid := (start + end) / 2
-		left := lcp(start, mid)
-		right := lcp(mid+1, end)
-		minLen := len(left)
-		if len(left) > len(right) {
-			minLen = len(right)
-		}
-		for i := 0; i < minLen; i++ {
-			if left[i] != right[i] {
-				return left[:i]
-			}
-		}
-		return left[:minLen]
-	}
-
-	return lcp(0, length-1)
-}
-
 // 三数之和为0
 func threeSum(nums []int) [][]int {
 	var results [][]int
@@ -574,29 +543,4 @@ func swapPairs(head *ListNode) *ListNode {
 		q = q.Next
 	}
 	return dummyNode.Next
-}
-
-// 移除元素 原地移除，空间O1
-func removeElement(nums []int, val int) int {
-	length := len(nums)
-	if length == 0 {
-		return 0
-	}
-
-	start, end := 0, len(nums)-1
-	for start <= end {
-		if nums[start] != val {
-			start++
-		} else {
-			if nums[end] != val {
-				nums[start] = nums[end]
-				start++
-				end--
-			} else {
-				end--
-			}
-		}
-	}
-
-	return end + 1
 }
