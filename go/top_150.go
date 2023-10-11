@@ -157,3 +157,29 @@ func lengthOfLastWord(s string) int {
 	}
 	return 0
 }
+
+// 14. 最长公共前缀
+func longestCommonPrefix(strs []string) string {
+	commonPrefix := func(s1 string, s2 string) string {
+		i := 0
+		for i < len(s1) && i < len(s2) {
+			if s1[i] != s2[i] {
+				break
+			}
+			i++
+		}
+		return s1[:i]
+	}
+
+	var binarySearch func([]string, int, int) string
+	binarySearch = func(strs []string, start, end int) string {
+		if start == end {
+			return strs[start]
+		}
+		mid := (start + end) / 2
+		left := binarySearch(strs, start, mid)
+		right := binarySearch(strs, mid+1, end)
+		return commonPrefix(left, right)
+	}
+	return binarySearch(strs, 0, len(strs)-1)
+}
