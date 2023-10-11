@@ -2,7 +2,10 @@
 
 package _go
 
-import "sort"
+import (
+	"sort"
+	"strings"
+)
 
 // 88. 合并两个有序数组
 func merge2(nums1 []int, m int, nums2 []int, n int) {
@@ -142,4 +145,15 @@ func canCompleteCircuit(gas []int, cost []int) int {
 	}
 
 	return -1
+}
+
+// 58. 最后一个单词的长度
+func lengthOfLastWord(s string) int {
+	words := strings.Split(s, " ")
+	for i := len(words) - 1; i >= 0; i-- {
+		if length := len(words[i]); length > 0 {
+			return length
+		}
+	}
+	return 0
 }
