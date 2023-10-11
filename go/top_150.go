@@ -106,3 +106,40 @@ func hIndex(citations []int) int {
 	}
 	return h
 }
+
+// 134. 加油站
+func canCompleteCircuit(gas []int, cost []int) int {
+	rest := make([]int, len(gas))
+	for i := 0; i < len(rest); i++ {
+		rest[i] = gas[i] - cost[i]
+	}
+
+	start, left := 0, 0
+	for start < len(rest) {
+		if rest[start] > 0 {
+			break
+		}
+		left += rest[start]
+		start++
+	}
+
+	if left == 0 && start == len(rest) {
+		return start - 1
+	}
+
+	for idx := start; idx < len(rest); idx++ {
+		i, sum := idx, 0
+		for i < len(rest) && sum >= 0 {
+			sum += rest[i]
+			i++
+		}
+		if i == len(rest) {
+			if sum += left; sum >= 0 {
+				return idx
+			}
+		}
+		left += rest[idx]
+	}
+
+	return -1
+}
