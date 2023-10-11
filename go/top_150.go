@@ -2,6 +2,8 @@
 
 package _go
 
+import "sort"
+
 // 88. 合并两个有序数组
 func merge2(nums1 []int, m int, nums2 []int, n int) {
 	i, j, k := m-1, n-1, m+n-1
@@ -84,4 +86,23 @@ func maxProfit2(prices []int) int {
 		dp[i] = maxP
 	}
 	return dp[len(prices)-1]
+}
+
+// 274. H 指数 3,0,6,1,5   1,3,1
+func hIndex(citations []int) int {
+	h := 0
+	sort.Ints(citations)
+	for i := len(citations) - 1; i >= 0; i-- {
+		length := len(citations) - i
+		count := 0
+		for j := len(citations) - 1; j >= i; j-- {
+			if citations[j] >= length {
+				count++
+			}
+		}
+		if count > h {
+			h = count
+		}
+	}
+	return h
 }
