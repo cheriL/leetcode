@@ -234,3 +234,12 @@ func candy(ratings []int) int {
 	}
 	return sum
 }
+
+// 151. 反转字符串中的单词
+func reverseWords(s string) string {
+	strList := strings.Fields(s)
+	for i := 0; i < len(strList)/2; i++ {
+		strList[i], strList[len(strList)-i] = strList[len(strList)-i], strList[i]
+	}
+	return strings.Join(strList, " ")
+}
