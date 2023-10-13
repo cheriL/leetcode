@@ -243,3 +243,32 @@ func reverseWords(s string) string {
 	}
 	return strings.Join(strList, " ")
 }
+
+// 68. 文本左右对齐
+func fullJustify(words []string, maxWidth int) []string {
+	var results []string
+	var subList []string
+	var subLen int
+	for i := 0; i < len(words); {
+		if maxWidth >= subLen+len(subList)+len(words[i]) {
+			subList = append(subList, words[i])
+			subLen += len(words[i])
+			i++
+		} else {
+			for j := 0; subLen < maxWidth; {
+				subList[j] += " "
+				subLen++
+				if j >= len(subList)-2 {
+					j = 0
+				} else {
+					j++
+				}
+			}
+			results = append(results, strings.Join(subList, ""))
+			subList, subLen = []string{}, 0
+		}
+	}
+	last := strings.Join(subList, " ")
+	results = append(results, last+strings.Repeat(" ", maxWidth-len(last)))
+	return results
+}
