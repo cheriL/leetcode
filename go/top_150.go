@@ -183,3 +183,92 @@ func longestCommonPrefix(strs []string) string {
 	}
 	return binarySearch(strs, 0, len(strs)-1)
 }
+
+// 135. 分发糖果
+func candy(ratings []int) int {
+	nums := make([]int, len(ratings))
+	patch := func(idx int) {
+		nums[idx] = 1
+		l, r := idx-1, idx+1
+		for i := l; i >= 0; i-- {
+			if ratings[i] == ratings[i+1] {
+				if nums[i] == 0 {
+					nums[i] = 1
+				}
+			} else if ratings[i] > ratings[i+1] {
+				if nums[i] <= nums[i+1] {
+					nums[i] = nums[i+1] + 1
+				}
+			} else {
+				break
+			}
+		}
+		for i := r; i < len(ratings); i++ {
+			if ratings[i] == ratings[i-1] {
+				nums[i] = 1
+			} else if ratings[i] > ratings[i-1] {
+				nums[i] = nums[i-1] + 1
+			} else {
+				break
+			}
+		}
+	}
+	for i := 0; i < len(ratings); i++ {
+		//寻找低点
+		l, r := i-1, i+1
+		if l >= 0 && ratings[l] < ratings[i] {
+			continue
+		}
+		if r < len(ratings) && ratings[r] <= ratings[i] {
+			continue
+		}
+		if nums[i] > 0 {
+			continue
+		}
+		patch(i)
+	}
+
+	sum := 0
+	for i := 0; i < len(nums); i++ {
+		sum += nums[i]
+	}
+	return sum
+}
+
+// 151. 反转字符串中的单词
+func reverseWords(s string) string {
+	strList := strings.Fields(s)
+	for i := 0; i < len(strList)/2; i++ {
+		strList[i], strList[len(strList)-i] = strList[len(strList)-i], strList[i]
+	}
+	return strings.Join(strList, " ")
+}
+
+// 68. 文本左右对齐
+func fullJustify(words []string, maxWidth int) []string {
+	var results []string
+	var subList []string
+	var subLen int
+	for i := 0; i < len(words); {
+		if maxWidth >= subLen+len(subList)+len(words[i]) {
+			subList = append(subList, words[i])
+			subLen += len(words[i])
+			i++
+		} else {
+			for j := 0; subLen < maxWidth; {
+				subList[j] += " "
+				subLen++
+				if j >= len(subList)-2 {
+					j = 0
+				} else {
+					j++
+				}
+			}
+			results = append(results, strings.Join(subList, ""))
+			subList, subLen = []string{}, 0
+		}
+	}
+	last := strings.Join(subList, " ")
+	results = append(results, last+strings.Repeat(" ", maxWidth-len(last)))
+	return results
+}
