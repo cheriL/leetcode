@@ -305,5 +305,14 @@ func isPalindrome2(s string) bool {
 
 // 392. 判断子序列
 func isSubsequence(s string, t string) bool {
-
+	i, j := 0, 0
+	for ; i < len(s) && j < len(t); j++ {
+		if s[i] == t[j] {
+			i++
+		}
+	}
+	if i < len(s) {
+		return false
+	}
+	return true
 }
