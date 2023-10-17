@@ -272,3 +272,38 @@ func fullJustify(words []string, maxWidth int) []string {
 	results = append(results, last+strings.Repeat(" ", maxWidth-len(last)))
 	return results
 }
+
+// 125. 验证回文串
+func isPalindrome2(s string) bool {
+	validate := func(c uint8) bool {
+		if c > 47 && c < 58 ||
+			c > 64 && c < 91 ||
+			c > 96 && c < 123 {
+			return true
+		}
+		return false
+	}
+	for i, j := 0, len(s)-1; i < j; {
+		for !validate(s[i]) && i < j {
+			i++
+		}
+		for !validate(s[j]) && j > i {
+			j--
+		}
+		if i < j {
+			if s[i] == s[j] {
+			} else if s[i] > 64 && s[j] > 64 && (s[i] == s[j]+32 || s[j] == s[i]+32) {
+			} else {
+				return false
+			}
+		}
+		i++
+		j--
+	}
+	return true
+}
+
+// 392. 判断子序列
+func isSubsequence(s string, t string) bool {
+
+}
