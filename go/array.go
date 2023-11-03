@@ -2004,3 +2004,34 @@ func longestCommonSubsequence(text1, text2 string) int {
 	}
 	return dp[m][n]
 }
+
+// 2191. 将杂乱无章的数字排序
+func sortJumbled(mapping []int, nums []int) (results []int) {
+	var newNums []int
+	new2old := map[int][]int{}
+	mapFn := func(num int) int {
+		var res int
+		for _, s := range strconv.Itoa(num) {
+			res = res*10 + mapping[s-'0']
+		}
+		return res
+	}
+
+	for _, num := range nums {
+		newNum := mapFn(num)
+		newNums = append(newNums, newNum)
+		if _, ok := new2old[newNum]; ok {
+			new2old[newNum] = append(new2old[newNum], num)
+		} else {
+			new2old[newNum] = []int{num}
+		}
+	}
+	sort.Ints(newNums)
+	for _, num := range newNums {
+		if _, ok := new2old[num]; ok {
+			results = append(results, new2old[num]...)
+			delete(new2old, num)
+		}
+	}
+	return
+}
