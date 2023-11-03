@@ -272,3 +272,117 @@ func fullJustify(words []string, maxWidth int) []string {
 	results = append(results, last+strings.Repeat(" ", maxWidth-len(last)))
 	return results
 }
+
+// 125. 验证回文串
+func isPalindrome2(s string) bool {
+	validate := func(c uint8) bool {
+		if c > 47 && c < 58 ||
+			c > 64 && c < 91 ||
+			c > 96 && c < 123 {
+			return true
+		}
+		return false
+	}
+	for i, j := 0, len(s)-1; i < j; {
+		for !validate(s[i]) && i < j {
+			i++
+		}
+		for !validate(s[j]) && j > i {
+			j--
+		}
+		if i < j {
+			if s[i] == s[j] {
+			} else if s[i] > 64 && s[j] > 64 && (s[i] == s[j]+32 || s[j] == s[i]+32) {
+			} else {
+				return false
+			}
+		}
+		i++
+		j--
+	}
+	return true
+}
+
+// 392. 判断子序列
+func isSubsequence(s string, t string) bool {
+	i, j := 0, 0
+	for ; i < len(s) && j < len(t); j++ {
+		if s[i] == t[j] {
+			i++
+		}
+	}
+	if i < len(s) {
+		return false
+	}
+	return true
+}
+
+type MyString struct {
+	str []rune
+}
+
+func NewMyString(s string) MyString {
+	str := make([]rune, 0, len(s))
+	for _, v := range s {
+		str = append(str, v)
+	}
+	return MyString{str: str}
+}
+func (ms MyString) Len() int               { return len(ms.str) }
+func (ms MyString) Less(i int, j int) bool { return ms.str[i] < ms.str[j] }
+func (ms MyString) Swap(i int, j int)      { ms.str[i], ms.str[j] = ms.str[j], ms.str[i]; return }
+func (ms MyString) Equal(t MyString) bool {
+	if ms.Len() != t.Len() {
+		return false
+	}
+	for i := 0; i < ms.Len(); i++ {
+		if ms.str[i] != t.str[i] {
+			return false
+		}
+	}
+	return true
+}
+
+// 242. 有效的字母异位词
+func isAnagram(s string, t string) bool {
+	ms, mt := NewMyString(s), NewMyString(t)
+	sort.Sort(ms)
+	sort.Sort(mt)
+	return ms.Equal(mt)
+}
+
+// 49. 字母异位词分组
+// 输入: strs = ["eat", "tea", "tan", "ate", "nat", "bat"]
+// 输出: [["bat"],["nat","tan"],["ate","eat","tea"]]
+func groupAnagrams(strs []string) [][]string {
+	myStrList := make([]MyString, 0, len(strs))
+	for i := 0; i < len(strs); i++ {
+		str := NewMyString(strs[i])
+		sort.Sort(str)
+		myStrList = append(myStrList, str)
+	}
+
+	strMappings := map[int][]string{
+		0: {strs[0]},
+	}
+	for i := 1; i < len(strs); i++ {
+		find := false
+		for index := range strMappings {
+			if myStrList[i].Equal(myStrList[index]) {
+				strMappings[index] = append(strMappings[index], strs[i])
+				find = true
+				break
+			}
+		}
+		if !find {
+			strMappings[i] = []string{strs[i]}
+		}
+	}
+
+	var results [][]string
+	for _, strList := range strMappings {
+		results = append(results, strList)
+	}
+
+	return results
+}
