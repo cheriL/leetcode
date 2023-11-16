@@ -428,3 +428,47 @@ func trap(height []int) int {
 	}
 	return sum
 }
+
+// 200. 岛屿数量
+func numIslands(grid [][]byte) int {
+	inArea := func(g [][]byte, r, c int) bool {
+		if r >= 0 && r < len(g) && c >= 0 && c < len(g[0]) {
+			return true
+		}
+		return false
+	}
+	var markArea func([][]byte, [][]int, int, int, int)
+	markArea = func(g [][]byte, t [][]int, r, c int, flag int) {
+		if !inArea(g, r, c) {
+			return
+		}
+		if g[r][c] == '0' || t[r][c] == flag {
+			return
+		}
+
+		if g[r][c] == '1' {
+			t[r][c] = flag
+		}
+		markArea(g, t, r, c-1, flag)
+		markArea(g, t, r-1, c, flag)
+		markArea(g, t, r, c+1, flag)
+		markArea(g, t, r+1, c, flag)
+	}
+
+	table := make([][]int, len(grid))
+	for i := 0; i < len(grid); i++ {
+		table[i] = make([]int, len(grid[0]))
+	}
+
+	count := 0
+	for i := 0; i < len(grid); i++ {
+		for j := 0; j < len(grid[i]); j++ {
+			if grid[i][j] == '1' && table[i][j] == 0 {
+				count++
+				markArea(grid, table, i, j, count)
+			}
+		}
+	}
+
+	return count
+}
