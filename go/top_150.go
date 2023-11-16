@@ -386,3 +386,45 @@ func groupAnagrams(strs []string) [][]string {
 
 	return results
 }
+
+// 42. 接雨水
+func trap(height []int) int {
+	var stack []int
+	push := func(val int) {
+		stack = append(stack, val)
+	}
+	pop := func() {
+		if len(stack) > 0 {
+			stack = stack[:len(stack)-1]
+		}
+	}
+
+	sum, left := 0, height[0]
+	for i := 1; i < len(height); i++ {
+		if height[i] <= height[i-1] {
+			//递减入栈
+			push(height[i])
+		} else {
+			if height[i] >= left {
+				for len(stack) > 0 {
+					sum += left - stack[len(stack)-1]
+					pop()
+				}
+				left = height[i]
+			} else {
+				count := 0
+				for len(stack) > 0 && stack[len(stack)-1] < height[i] {
+					sum += height[i] - stack[len(stack)-1]
+					pop()
+					count++
+				}
+				for count > 0 {
+					push(height[i])
+					count--
+				}
+				push(height[i])
+			}
+		}
+	}
+	return sum
+}
