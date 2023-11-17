@@ -386,3 +386,146 @@ func groupAnagrams(strs []string) [][]string {
 
 	return results
 }
+
+// 42. 接雨水
+func trap(height []int) int {
+	var stack []int
+	push := func(val int) {
+		stack = append(stack, val)
+	}
+	pop := func() {
+		if len(stack) > 0 {
+			stack = stack[:len(stack)-1]
+		}
+	}
+
+	sum, left := 0, height[0]
+	for i := 1; i < len(height); i++ {
+		if height[i] <= height[i-1] {
+			//递减入栈
+			push(height[i])
+		} else {
+			if height[i] >= left {
+				for len(stack) > 0 {
+					sum += left - stack[len(stack)-1]
+					pop()
+				}
+				left = height[i]
+			} else {
+				count := 0
+				for len(stack) > 0 && stack[len(stack)-1] < height[i] {
+					sum += height[i] - stack[len(stack)-1]
+					pop()
+					count++
+				}
+				for count > 0 {
+					push(height[i])
+					count--
+				}
+				push(height[i])
+			}
+		}
+	}
+	return sum
+}
+
+// 200. 岛屿数量
+func numIslands(grid [][]byte) int {
+	inArea := func(g [][]byte, r, c int) bool {
+		if r >= 0 && r < len(g) && c >= 0 && c < len(g[0]) {
+			return true
+		}
+		return false
+	}
+	var markArea func([][]byte, [][]int, int, int, int)
+	markArea = func(g [][]byte, t [][]int, r, c int, flag int) {
+		if !inArea(g, r, c) {
+			return
+		}
+		if g[r][c] == '0' || t[r][c] == flag {
+			return
+		}
+
+		if g[r][c] == '1' {
+			t[r][c] = flag
+		}
+		markArea(g, t, r, c-1, flag)
+		markArea(g, t, r-1, c, flag)
+		markArea(g, t, r, c+1, flag)
+		markArea(g, t, r+1, c, flag)
+	}
+
+	table := make([][]int, len(grid))
+	for i := 0; i < len(grid); i++ {
+		table[i] = make([]int, len(grid[0]))
+	}
+
+	count := 0
+	for i := 0; i < len(grid); i++ {
+		for j := 0; j < len(grid[i]); j++ {
+			if grid[i][j] == '1' && table[i][j] == 0 {
+				count++
+				markArea(grid, table, i, j, count)
+			}
+		}
+	}
+
+	return count
+}
+
+// 637. 二叉树的层平均值
+func averageOfLevels(root *TreeNode) (results []float64) {
+	if root == nil {
+		return
+	}
+
+	queue := []*TreeNode{root}
+	length, sum := 1, 0
+	curCount, count := 1, 0
+	for i := 0; i < length; i++ {
+		node := queue[i]
+		if node.Left != nil {
+			queue = append(queue, node.Left)
+			count++
+		}
+		if node.Right != nil {
+			queue = append(queue, node.Right)
+			count++
+		}
+		sum += node.Val
+		if i == length-1 {
+			res := float64(sum) / float64(curCount)
+			results = append(results, res)
+			length += count
+			curCount = count
+			sum, count = 0, 0
+		}
+	}
+	return
+}
+
+// 77. 组合
+func combine(n int, k int) [][]int {
+	var results [][]int
+	var path []int
+
+	var backTrace func(int, int, int, []int, *[][]int)
+	backTrace = func(idx int, n int, length int, path []int, results *[][]int) {
+		if len(path) == length {
+			result := make([]int, len(path))
+			copy(result, path)
+			*results = append(*results, result)
+			return
+		}
+
+		for i := idx; i < n+1; i++ {
+			path = append(path, i)
+			backTrace(i+1, n, length, path, results)
+			path = path[:len(path)-1]
+		}
+	}
+
+	backTrace(1, n, k, path, &results)
+
+	return results
+}
