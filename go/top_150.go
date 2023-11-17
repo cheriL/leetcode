@@ -472,3 +472,60 @@ func numIslands(grid [][]byte) int {
 
 	return count
 }
+
+// 637. 二叉树的层平均值
+func averageOfLevels(root *TreeNode) (results []float64) {
+	if root == nil {
+		return
+	}
+
+	queue := []*TreeNode{root}
+	length, sum := 1, 0
+	curCount, count := 1, 0
+	for i := 0; i < length; i++ {
+		node := queue[i]
+		if node.Left != nil {
+			queue = append(queue, node.Left)
+			count++
+		}
+		if node.Right != nil {
+			queue = append(queue, node.Right)
+			count++
+		}
+		sum += node.Val
+		if i == length-1 {
+			res := float64(sum) / float64(curCount)
+			results = append(results, res)
+			length += count
+			curCount = count
+			sum, count = 0, 0
+		}
+	}
+	return
+}
+
+// 77. 组合
+func combine(n int, k int) [][]int {
+	var results [][]int
+	var path []int
+
+	var backTrace func(int, int, int, []int, *[][]int)
+	backTrace = func(idx int, n int, length int, path []int, results *[][]int) {
+		if len(path) == length {
+			result := make([]int, len(path))
+			copy(result, path)
+			*results = append(*results, result)
+			return
+		}
+
+		for i := idx; i < n+1; i++ {
+			path = append(path, i)
+			backTrace(i+1, n, length, path, results)
+			path = path[:len(path)-1]
+		}
+	}
+
+	backTrace(1, n, k, path, &results)
+
+	return results
+}
