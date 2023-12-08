@@ -529,3 +529,55 @@ func combine(n int, k int) [][]int {
 
 	return results
 }
+
+// 小于n的最大数
+// 给定一个数组arr=[2,3,4,5],N=2345,求使用arr中的数字，组成一个不大于N的最大的数字。arr中的数字可以多次使用
+func maxNum(nums []int, target int) int {
+	sort.Ints(nums)
+	var targetNums []int
+	for target > 0 {
+		n := target % 10
+		target = target / 10
+		targetNums = append([]int{n}, targetNums...)
+	}
+
+	var binarySearch func([]int, int, int, int) int
+	binarySearch = func(nums []int, target int, start int, end int) int {
+		if start > end {
+			return -1
+		}
+		mid := (start + end) / 2
+		if nums[mid] == target {
+			return nums[mid]
+		} else if nums[mid] < target {
+			if mid < end && nums[mid+1] > target {
+				return nums[mid]
+			}
+			return binarySearch(nums, target, mid+1, end)
+		} else {
+			return binarySearch(nums, target, start, mid-1)
+		}
+	}
+
+	var resultNums []int
+	flag := 0
+
+	//从末尾开始查找
+	for i := len(targetNums) - 1; i >= 0; i-- {
+		if res := binarySearch(nums, targetNums[i]-flag, 0, len(nums)-1); res > 0 {
+			resultNums = append(resultNums, res)
+			flag = 0
+		} else {
+			if i > 0 {
+				resultNums = append(resultNums, nums[len(nums)-1])
+				flag = 1
+			}
+		}
+	}
+
+	result := 0
+	for i := len(resultNums) - 1; i >= 0; i-- {
+		result = result*10 + resultNums[i]
+	}
+	return result
+}
