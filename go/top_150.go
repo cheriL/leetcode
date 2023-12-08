@@ -581,3 +581,36 @@ func maxNum(nums []int, target int) int {
 	}
 	return result
 }
+
+// 33. 搜索旋转排序数组
+func search(nums []int, target int) int {
+	var binarySearch func([]int, int, int, int) int
+	binarySearch = func(nums []int, target int, start int, end int) int {
+		if start > end {
+			return -1
+		}
+
+		mid := (start + end) / 2
+		if nums[mid] == target {
+			return mid
+		} else if nums[mid] < target {
+			if res := binarySearch(nums, target, mid+1, end); res >= 0 {
+				return res
+			}
+
+			if nums[0] >= nums[mid] {
+				return binarySearch(nums, target, start, mid-1)
+			}
+		} else {
+			if res := binarySearch(nums, target, start, mid-1); res >= 0 {
+				return res
+			}
+
+			if nums[0] <= nums[mid] {
+				return binarySearch(nums, target, mid+1, end)
+			}
+		}
+		return -1
+	}
+	return binarySearch(nums, target, 0, len(nums)-1)
+}
