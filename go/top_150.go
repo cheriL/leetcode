@@ -614,3 +614,14 @@ func search(nums []int, target int) int {
 	}
 	return binarySearch(nums, target, 0, len(nums)-1)
 }
+
+// 70. 爬楼梯
+func climbStairs(n int) int {
+	dp0, dp1 := 1, 1
+	for i := 2; i <= n; i++ {
+		temp := dp1
+		dp1 = dp0 + dp1
+		dp0 = temp
+	}
+	return dp1
+}
