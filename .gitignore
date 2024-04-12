@@ -23,6 +23,6 @@ go.work
 .idea/
 .DS_Store
 main.*
-test.*
+test*.go
 
 /target

@@ -365,29 +365,6 @@ func firstMissingPositive(nums []int) int {
 	return len(nums) + 1
 }
 
-// 45. 跳跃游戏 II
-func jump(nums []int) int {
-	max := func(x, y int) int {
-		if x > y {
-			return x
-		}
-		return y
-	}
-
-	length := len(nums)
-	end := 0
-	maxPosition := 0
-	steps := 0
-	for i := 0; i < length-1; i++ {
-		maxPosition = max(maxPosition, i+nums[i])
-		if i == end {
-			end = maxPosition
-			steps++
-		}
-	}
-	return steps
-}
-
 // 47. 全排列 II
 func permuteUnique(nums []int) [][]int {
 	sort.Ints(nums)
@@ -425,7 +402,7 @@ func permuteUnique(nums []int) [][]int {
 }
 
 // 48. 旋转图像
-func rotate(matrix [][]int) {
+func rotate2(matrix [][]int) {
 	//左右
 	width := len(matrix)
 	for i := 0; i < width; i++ {
@@ -503,7 +480,7 @@ func spiralOrder(matrix [][]int) []int {
 }
 
 // 56. 合并区间
-func merge(intervals [][]int) [][]int {
+func merge1(intervals [][]int) [][]int {
 	var results [][]int
 	bitMap := make([]byte, 20001)
 
@@ -656,33 +633,6 @@ func subsets(nums []int) [][]int {
 	return results
 }
 
-// 88. 合并两个有序数组
-func merge1(nums1 []int, m int, nums2 []int, n int) {
-	i, j, k := 0, 0, 0
-	for k < m+n {
-		if i == m {
-			for n > j {
-				nums1[m+n-1-k] = nums2[n-1-j]
-				j++
-				k++
-			}
-			break
-		}
-		if j == n {
-			break
-		}
-
-		if nums1[m-1-i] > nums2[n-1-j] {
-			nums1[m+n-1-k] = nums1[m-1-i]
-			i++
-		} else {
-			nums1[m+n-1-k] = nums2[n-1-j]
-			j++
-		}
-		k++
-	}
-}
-
 // 90. 子集 II
 func subsetsWithDup(nums []int) [][]int {
 	sort.Ints(nums)
@@ -763,23 +713,6 @@ func buildTree1(inorder []int, postorder []int) *TreeNode {
 	}
 
 	return makeTreeFn(inorder, postorder)
-}
-
-// 80. 删除有序数组中的重复项 II
-func removeDuplicates1(nums []int) int {
-	length := len(nums)
-	if length <= 2 {
-		return length
-	}
-	length = 2
-	for i := 2; i < len(nums); i++ {
-		if nums[i] == nums[length-2] {
-		} else {
-			nums[length] = nums[i]
-			length++
-		}
-	}
-	return length
 }
 
 // 108. 将有序数组转换为二叉搜索树
@@ -1046,41 +979,6 @@ func findPeakElement(nums []int) int {
 	return -1
 }
 
-// 167. 两数之和 II - 输入有序数组
-func twoSum(numbers []int, target int) []int {
-	results := make([]int, 2)
-	for i, j := 0, len(numbers)-1; i < j; {
-		sum := numbers[i] + numbers[j]
-		if sum == target {
-			results[0], results[1] = i+1, j+1
-			break
-		} else if sum < target {
-			i++
-		} else {
-			j--
-		}
-	}
-	return results
-}
-
-// 169. 多数元素
-func majorityElement(nums []int) int {
-	num, count := 0, 0
-	for _, v := range nums {
-		if count == 0 {
-			num = v
-			count++
-		} else {
-			if num == v {
-				count++
-			} else {
-				count--
-			}
-		}
-	}
-	return num
-}
-
 // 179. 最大数
 func largestNumber(nums []int) string {
 	if len(nums) == 0 {
@@ -1166,21 +1064,6 @@ func rotate1(nums []int, k int) {
 	reverse(0, len(nums)-1)
 	reverse(0, k%len(nums)-1)
 	reverse(k%len(nums), len(nums)-1)
-}
-
-// 55. 跳跃游戏
-func canJump(nums []int) bool {
-	dp := make([]bool, len(nums))
-	dp[0] = true
-	for i := 1; i < len(nums); i++ {
-		for j := 0; j < i; j++ {
-			if nums[j] >= i-j && dp[j] {
-				dp[i] = true
-				break
-			}
-		}
-	}
-	return dp[len(nums)-1]
 }
 
 // 62. 不同路径
@@ -1747,25 +1630,6 @@ func rob2(nums []int) int {
 	}
 
 	return result
-}
-
-// 238. 除自身以外数组的乘积
-func productExceptSelf(nums []int) []int {
-	if len(nums) == 0 {
-		return nil
-	}
-	l, r := make([]int, len(nums)), make([]int, len(nums))
-	l[0], r[len(nums)-1] = 1, 1
-	for i := 1; i < len(nums); i++ {
-		l[i] = l[i-1] * nums[i-1]
-	}
-	for i := len(nums) - 2; i >= 0; i-- {
-		r[i] = r[i+1] * nums[i+1]
-	}
-	for i := 0; i < len(nums); i++ {
-		l[i] = l[i] * r[i]
-	}
-	return l
 }
 
 // 240. 搜索二维矩阵 II
