@@ -119,3 +119,18 @@ func reverseBetween(head *ListNode, left int, right int) *ListNode {
 
 	return dummyNode.Next
 }
+
+func removeNthFromEnd(head *ListNode, n int) *ListNode {
+	dummyNode := &ListNode{Next: head}
+	pre, p := dummyNode, head
+	for i := 1; p.Next != nil; {
+		if i < n {
+			p = p.Next
+			i++
+			continue
+		}
+		pre, p = pre.Next, p.Next
+	}
+	pre.Next = pre.Next.Next
+	return dummyNode.Next
+}

@@ -20,3 +20,27 @@ func searchInsert(nums []int, target int) int {
 
 	return binarySearch(nums, 0, len(nums)-1, target)
 }
+
+func hasPathSum(root *TreeNode, targetSum int) bool {
+	if root == nil {
+		return false
+	}
+
+	sum := targetSum - root.Val
+	if root.Left == nil && root.Right == nil {
+		if sum == 0 {
+			return true
+		}
+		return false
+	}
+
+	left, right := false, false
+	if root.Left != nil {
+		left = hasPathSum(root.Left, sum)
+	}
+	if root.Right != nil {
+		right = hasPathSum(root.Right, sum)
+	}
+
+	return left || right
+}

@@ -105,6 +105,17 @@ func (s myStr) Equal(s2 myStr) bool {
 	}
 	return true
 }
+
+func isAnagram(s string, t string) bool {
+	if len(s) != len(t) {
+		return false
+	}
+	ss, tt := newMyStr(s), newMyStr(t)
+	sort.Sort(ss)
+	sort.Sort(tt)
+	return ss.Equal(tt)
+}
+
 func groupAnagrams(strs []string) (results [][]string) {
 	table := map[string][]string{}
 	for _, str := range strs {
@@ -119,5 +130,38 @@ func groupAnagrams(strs []string) (results [][]string) {
 	for _, strs := range table {
 		results = append(results, strs)
 	}
+	return
+}
+
+func TwoSum2(nums []int, target int) (results []int) {
+	defer func() {
+		sort.Ints(results)
+	}()
+
+	valueIdxs := map[int][]int{}
+	for k, v := range nums {
+		if _, ok := valueIdxs[v]; ok {
+			valueIdxs[v] = append(valueIdxs[v], k)
+		} else {
+			valueIdxs[v] = []int{k}
+		}
+	}
+
+	sort.Ints(nums)
+	for p, q := 0, len(nums)-1; p < q; {
+		if target == nums[p]+nums[q] {
+			if nums[p] == nums[q] {
+				results = append(results, []int{valueIdxs[nums[p]][0], valueIdxs[nums[p]][1]}...)
+			} else {
+				results = append(results, []int{valueIdxs[nums[p]][0], valueIdxs[nums[q]][0]}...)
+			}
+			return
+		} else if target > nums[p]+nums[q] {
+			p++
+		} else {
+			q--
+		}
+	}
+
 	return
 }

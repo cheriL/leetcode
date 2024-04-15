@@ -93,10 +93,35 @@ func buildTree2(inorder []int, postorder []int) *TreeNode {
 }
 
 func connect(root *Node) *Node {
-	return nil
+	if root == nil {
+		return root
+	}
+
+	var rNode *Node
+	for next := root.Next; next != nil; next = next.Next {
+		if next.Left != nil {
+			rNode = next.Left
+			break
+		}
+		if next.Right != nil {
+			rNode = next.Right
+			break
+		}
+	}
+	if root.Right != nil {
+		root.Right.Next = rNode
+		rNode = root.Right
+	}
+	if root.Left != nil {
+		root.Left.Next = rNode
+	}
+	root.Right = connect(root.Right)
+	root.Left = connect(root.Left)
+
+	return root
 }
 
-func Flatten(root *TreeNode) {
+func flatten(root *TreeNode) {
 	var traversal func(root *TreeNode) *TreeNode
 	traversal = func(root *TreeNode) *TreeNode {
 		if root == nil || root.Left == nil && root.Right == nil {
