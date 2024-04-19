@@ -134,3 +134,54 @@ func removeNthFromEnd(head *ListNode, n int) *ListNode {
 	pre.Next = pre.Next.Next
 	return dummyNode.Next
 }
+
+func deleteDuplicates(head *ListNode) *ListNode {
+	if head == nil || head.Next == nil {
+		return head
+	}
+	dummyNode := &ListNode{}
+	p, q := dummyNode, head
+	for t := q; q.Next != nil; {
+		if q.Val != q.Next.Val {
+			if t == q {
+				p.Next = q
+				p = q
+				t = q.Next
+				p.Next = nil
+			} else {
+				t = q.Next
+			}
+			q = t
+		} else {
+			q = q.Next
+		}
+
+		if q.Next == nil && t == q {
+			p.Next = q
+		}
+	}
+
+	return dummyNode.Next
+}
+
+func rotateRight(head *ListNode, k int) *ListNode {
+	if head == nil || head.Next == nil || k == 0 {
+		return head
+	}
+
+	length := 1
+	p := head
+	for ; p.Next != nil; p = p.Next {
+		length++
+	}
+	p.Next = head
+
+	p = head
+	for i := 1; i < length-k%length; p = p.Next {
+		i++
+	}
+	head = p.Next
+	p.Next = nil
+
+	return head
+}

@@ -165,3 +165,44 @@ func TwoSum2(nums []int, target int) (results []int) {
 
 	return
 }
+
+func isHappy(n int) bool {
+	doSum := func(n int) (result int) {
+		for n > 0 {
+			num := n % 10
+			result += num * num
+			n /= 10
+		}
+		return
+	}
+
+	p, q := n, n
+	for {
+		p = doSum(p)
+		q = doSum(doSum(q))
+		if q == 1 {
+			return true
+		}
+		if p == q {
+			break
+		}
+	}
+
+	return false
+}
+
+func containsNearbyDuplicate(nums []int, k int) bool {
+	mapping := map[int]int{}
+	for key, val := range nums {
+		if idx, ok := mapping[val]; ok {
+			if key-idx <= k {
+				return true
+			} else {
+				mapping[val] = key
+			}
+		} else {
+			mapping[val] = key
+		}
+	}
+	return false
+}
