@@ -185,3 +185,29 @@ func rotateRight(head *ListNode, k int) *ListNode {
 
 	return head
 }
+
+func partition(head *ListNode, x int) *ListNode {
+	dummyNode := &ListNode{}
+	var tempHead *ListNode
+	var tempPre *ListNode
+
+	k, p := dummyNode, head
+	for p != nil {
+		next := p.Next
+		if p.Val < x {
+			k.Next, p.Next = p, nil
+			k, p = k.Next, next
+		} else {
+			if tempHead == nil {
+				tempHead, tempPre = p, p
+			} else {
+				tempPre.Next = p
+				tempPre = tempPre.Next
+			}
+			tempPre.Next = nil
+			p = next
+		}
+	}
+	k.Next = tempHead
+	return dummyNode.Next
+}

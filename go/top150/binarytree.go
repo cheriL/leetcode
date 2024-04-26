@@ -1,6 +1,9 @@
 package top150
 
-import "math"
+import (
+	"math"
+	"sort"
+)
 
 func maxDepth(root *TreeNode) int {
 	var traversal func(*TreeNode, int) int
@@ -210,5 +213,228 @@ func maxPathSum(root *TreeNode) int {
 	}
 
 	traversalTree(root)
+	return result
+}
+
+//func countNodes(root *TreeNode) int {
+//	if root == nil {
+//		return 0
+//	}
+//
+//	// 完全二叉树，最左节点一定在最后一层
+//	h := 0
+//	for node := root.Left; node != nil; node = node.Left {
+//		h++
+//	}
+//	// 节点的个数，一定在 [2^h, 2^(h+1)-1]，在这个范围内，判断对应的节点是否存在
+//	// 最后一层的第 k 个节点，k 值的二进制表示这个节点在树上的路径， 0为左子节点，1为右子节点
+//	findNode := func(k int) bool {
+//		for level := h; level > 0; level-- {
+//
+//		}
+//
+//		return true
+//	}
+//
+//	var binarySearch func(int, int) int
+//	binarySearch = func(start, end int) int {
+//		for start < end {
+//			mid := (start + end) >> 1
+//			if findNode(mid) {
+//				start = mid + 1
+//			} else {
+//				end = mid
+//			}
+//		}
+//		return start
+//	}
+//
+//	sort.Search()
+//}
+
+func countNodes(root *TreeNode) int {
+	if root == nil {
+		return 0
+	}
+
+	// 完全二叉树，最左节点一定在最后一层
+	level := 0
+	for node := root; node.Left != nil; node = node.Left {
+		level++
+	}
+
+	// 节点的个数，一定在 [2^h, 2^(h+1)-1]，在这个范围内，判断对应的节点是否存在
+	// 最后一层的第 k 个节点，k 的二进制表示包含 h+1 位，
+	// 其中最高位是 1，其余各位从高到低表示从根节点到第 k 个节点的路径，
+	//0 表示移动到左子节点，1 表示移动到右子节点。通过位运算得到第 k 个节点对应的路径，
+	//判断该路径对应的节点是否存在，即可判断第 k 个节点是否存在
+	return sort.Search(1<<(level+1), func(k int) bool {
+		if k <= 1<<level {
+			return false
+		}
+		bits := 1 << (level - 1)
+		node := root
+		for node != nil && bits > 0 {
+			if bits&k == 0 {
+				node = node.Left
+			} else {
+				node = node.Right
+			}
+			bits >>= 1
+		}
+		return node == nil
+	}) - 1
+}
+
+func lowestCommonAncestor(root, p, q *TreeNode) (result *TreeNode) {
+	var findCommonAncestor func(node *TreeNode) int
+	findCommonAncestor = func(node *TreeNode) int {
+		if node == nil {
+			return 0
+		}
+
+		left := findCommonAncestor(node.Left)
+		right := findCommonAncestor(node.Right)
+		if node.Val == p.Val || node.Val == q.Val {
+			if left > 0 || right > 0 {
+				result = node
+				return 2
+			} else {
+				return 1
+			}
+		}
+
+		if left == 1 && right == 1 {
+			result = node
+			return 2
+		} else {
+			return left + right
+		}
+	}
+
+	findCommonAncestor(root)
+	return
+}
+
+func rightSideView(root *TreeNode) (results []int) {
+	if root == nil {
+		return
+	}
+
+	nodes := []*TreeNode{root}
+	for len(nodes) > 0 {
+		length := len(nodes)
+		results = append(results, nodes[length-1].Val)
+		for i := 0; i < length; i++ {
+			if nodes[i].Left != nil {
+				nodes = append(nodes, nodes[i].Left)
+			}
+			if nodes[i].Right != nil {
+				nodes = append(nodes, nodes[i].Right)
+			}
+		}
+		nodes = nodes[length:]
+	}
+	return
+}
+
+func averageOfLevels(root *TreeNode) (results []float64) {
+	if root == nil {
+		return
+	}
+
+	nodes := []*TreeNode{root}
+	for len(nodes) > 0 {
+		length := len(nodes)
+		sum := float64(0)
+		for i := 0; i < length; i++ {
+			if nodes[i].Left != nil {
+				nodes = append(nodes, nodes[i].Left)
+			}
+			if nodes[i].Right != nil {
+				nodes = append(nodes, nodes[i].Right)
+			}
+			sum += float64(nodes[i].Val)
+		}
+		results = append(results, sum/float64(length))
+		nodes = nodes[length:]
+	}
+	return
+}
+
+func levelOrder(root *TreeNode) (results [][]int) {
+	if root == nil {
+		return
+	}
+
+	nodes := []*TreeNode{root}
+	for len(nodes) > 0 {
+		length := len(nodes)
+		result := make([]int, length)
+		for i := 0; i < length; i++ {
+			if nodes[i].Left != nil {
+				nodes = append(nodes, nodes[i].Left)
+			}
+			if nodes[i].Right != nil {
+				nodes = append(nodes, nodes[i].Right)
+			}
+			result[i] = nodes[i].Val
+		}
+		results = append(results, result)
+		nodes = nodes[length:]
+	}
+	return
+}
+
+func zigzagLevelOrder(root *TreeNode) (results [][]int) {
+	if root == nil {
+		return
+	}
+
+	nodes := []*TreeNode{root}
+	adverse := true
+	for ; len(nodes) > 0; adverse = !adverse {
+		length := len(nodes)
+		result := make([]int, length)
+		for i := 0; i < length; i++ {
+			if nodes[i].Left != nil {
+				nodes = append(nodes, nodes[i].Left)
+			}
+			if nodes[i].Right != nil {
+				nodes = append(nodes, nodes[i].Right)
+			}
+
+			if adverse {
+				result[i] = nodes[i].Val
+			} else {
+				result[i] = nodes[length-1-i].Val
+			}
+		}
+		results = append(results, result)
+		nodes = nodes[length:]
+	}
+	return
+}
+
+func getMinimumDifference(root *TreeNode) int {
+	var nodeVal []int
+	var traversal func(node *TreeNode)
+	traversal = func(node *TreeNode) {
+		if node == nil {
+			return
+		}
+		traversal(node.Left)
+		nodeVal = append(nodeVal, node.Val)
+		traversal(node.Right)
+	}
+
+	traversal(root)
+	result := math.MaxInt32
+	for i := 1; i < len(nodeVal); i++ {
+		if val := nodeVal[i] - nodeVal[i-1]; val < result {
+			result = val
+		}
+	}
+
 	return result
 }
